@@ -133,25 +133,26 @@ def shortest_path(source, target):
         #If node contains goal state, return soln
         #goal = target #person_id
         if node.state == target: #NEED TO DEFINE WHAT THE GOAL IS. TARGET?
-            actions = [] #movie_ids used to get to this node - for backtracing
-            states = [] #person_ids
-            solution = [] #list of pairs (movie_id, person_id)
+            return backtrace_soln(node)
+            # actions = [] #movie_ids used to get to this node - for backtracing
+            # states = [] #person_ids
+            # solution = [] #list of pairs (movie_id, person_id)
 
-            #Backtracing
-            #Follow parent nodes to find soln
-            while node.parent is not None: #when we get back to orig node, has no parent
-                actions.append(node.action)
-                states.append(node.state)
-                node = node.parent
+            # #Backtracing
+            # #Follow parent nodes to find soln
+            # while node.parent is not None: #when we get back to orig node, has no parent
+            #     actions.append(node.action)
+            #     states.append(node.state)
+            #     node = node.parent
 
-            actions.reverse() #reverse (bc was goal -> initial)
-            states.reverse()
+            # actions.reverse() #reverse (bc was goal -> initial)
+            # states.reverse()
 
-            for i in range(0, len(actions)):
-                solution.append((actions[i], states[i]))
+            # for i in range(0, len(actions)):
+            #     solution.append((actions[i], states[i]))
 
-            #print(solution)
-            return solution #need to change this to return list of pairs
+            # #print(solution)
+            # return solution #need to change this to return list of pairs
 
         #Else:
         # Add node to explored set (mark visited)
@@ -162,14 +163,59 @@ def shortest_path(source, target):
         explored.add(node.state)
 
         #Add neighbors (co-stars) to the frontier
-        for action, state in neighbors_for_person(node.state): #Neighbors of the current node!
+        for action, state in neighbors_for_person(node.state): #Neighbors of the current node!           
             if not qFront.contains_state(state) and state not in explored:
                 child = Node(state=state, parent=node, action=action)
+
+                if child.state == target: #NEED TO DEFINE WHAT THE GOAL IS. TARGET?
+                    return backtrace_soln(child)
+                    # actions = [] #movie_ids used to get to this node - for backtracing
+                    # states = [] #person_ids
+                    # solution = [] #list of pairs (movie_id, person_id)
+
+                    # #Backtracing
+                    # #Follow parent nodes to find soln
+                    # while child.parent is not None: #when we get back to orig node, has no parent
+                    #     actions.append(child.action)
+                    #     states.append(child.state)
+                    #     child = child.parent
+
+                    # actions.reverse() #reverse (bc was goal -> initial)
+                    # states.reverse()
+
+                    # for i in range(0, len(actions)):
+                    #     solution.append((actions[i], states[i]))
+
+                    # #print(solution)
+                    # return solution #need to change this to return list of pairs
+
+
                 qFront.add(child) 
 
         #print("Nodes Explored: ", nodes_explored)
 
     #end while
+
+def backtrace_soln(node):
+    actions = [] #movie_ids used to get to this node - for backtracing
+    states = [] #person_ids
+    solution = [] #list of pairs (movie_id, person_id)
+
+    #Backtracing
+    #Follow parent nodes to find soln
+    while node.parent is not None: #when we get back to orig node, has no parent
+        actions.append(node.action)
+        states.append(node.state)
+        node = node.parent
+
+    actions.reverse() #reverse (bc was goal -> initial)
+    states.reverse()
+
+    for i in range(0, len(actions)):
+        solution.append((actions[i], states[i]))
+
+    #print(solution)
+    return solution #need to change this to return list of pairs
 
 
 def person_id_for_name(name):
