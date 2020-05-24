@@ -65,27 +65,28 @@ def main():
     print("Loading data...")
     load_data(directory)
     print("Data loaded.")
+    while True:
+        source = person_id_for_name(input("Name: "))
+        if source is None:
+            sys.exit("Person not found.")
+        target = person_id_for_name(input("Name: "))
+        if target is None:
+            sys.exit("Person not found.")
 
-    source = person_id_for_name(input("Name: "))
-    if source is None:
-        sys.exit("Person not found.")
-    target = person_id_for_name(input("Name: "))
-    if target is None:
-        sys.exit("Person not found.")
+        path = shortest_path(source, target)
 
-    path = shortest_path(source, target)
-
-    if path is None:
-        print("Not connected.")
-    else:
-        degrees = len(path)
-        print(f"{degrees} degrees of separation.")
-        path = [(None, source)] + path
-        for i in range(degrees):
-            person1 = people[path[i][1]]["name"]
-            person2 = people[path[i + 1][1]]["name"]
-            movie = movies[path[i + 1][0]]["title"]
-            print(f"{i + 1}: {person1} and {person2} starred in {movie}")
+        if path is None:
+            print("Not connected.")
+        else:
+            degrees = len(path)
+            print(f"{degrees} degrees of separation.")
+            path = [(None, source)] + path
+            for i in range(degrees):
+                person1 = people[path[i][1]]["name"]
+                person2 = people[path[i + 1][1]]["name"]
+                movie = movies[path[i + 1][0]]["title"]
+                print(f"{i + 1}: {person1} and {person2} starred in {movie}")
+                
 
 #source and target are person_ids
 def shortest_path(source, target):
@@ -162,7 +163,7 @@ def backtrace_soln(node):
 
     for i in range(0, len(actions)):
         solution.append((actions[i], states[i]))
-        
+
     solution.reverse() #reverse (bc was goal -> initial)
     #print(solution)
     return solution #need to change this to return list of pairs
