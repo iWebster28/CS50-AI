@@ -87,7 +87,6 @@ def main():
             movie = movies[path[i + 1][0]]["title"]
             print(f"{i + 1}: {person1} and {person2} starred in {movie}")
 
-
 #source and target are person_ids
 def shortest_path(source, target):
     """
@@ -103,25 +102,16 @@ def shortest_path(source, target):
     #person id as input, ret. set of (movie_id, person_id) pairs 
     #for all people starring in a movie w given person
 
-    #can check for goal node before we add a node to frontier - faster!
-    
     #Initialization
     explored = set() #set of visited nodes to prevent cycle loops
     qFront = QueueFrontier() #initialize frontier
     nodes_explored = 0
-
-    #Initial state: Get all (movie, person) pairs for people 
-    #who starred in any movie with the "source" person
-    #neighbors = neighbors_for_person(source)
-    #print(neighbors)
 
     #Initialize frontier to starting person (source person_id)
     startNode = Node(state=source, parent=None, action=None)
     qFront.add(startNode)
 
     while True: #loop until soln found
-        #print("LOOP")
-
         #If frontier empty, then no soln. Return none
         if qFront.empty():
             return None
@@ -130,29 +120,10 @@ def shortest_path(source, target):
         node = qFront.remove()
         nodes_explored += 1 #Diagnostic
 
-        #If node contains goal state, return soln
-        #goal = target #person_id
-        if node.state == target: #NEED TO DEFINE WHAT THE GOAL IS. TARGET?
+        #If node contains goal state, return soln 
+        #goal = target = person_id
+        if node.state == target:
             return backtrace_soln(node)
-            # actions = [] #movie_ids used to get to this node - for backtracing
-            # states = [] #person_ids
-            # solution = [] #list of pairs (movie_id, person_id)
-
-            # #Backtracing
-            # #Follow parent nodes to find soln
-            # while node.parent is not None: #when we get back to orig node, has no parent
-            #     actions.append(node.action)
-            #     states.append(node.state)
-            #     node = node.parent
-
-            # actions.reverse() #reverse (bc was goal -> initial)
-            # states.reverse()
-
-            # for i in range(0, len(actions)):
-            #     solution.append((actions[i], states[i]))
-
-            # #print(solution)
-            # return solution #need to change this to return list of pairs
 
         #Else:
         # Add node to explored set (mark visited)
@@ -166,29 +137,10 @@ def shortest_path(source, target):
         for action, state in neighbors_for_person(node.state): #Neighbors of the current node!           
             if not qFront.contains_state(state) and state not in explored:
                 child = Node(state=state, parent=node, action=action)
-
-                if child.state == target: #NEED TO DEFINE WHAT THE GOAL IS. TARGET?
+                
+                #If goal node found - return solution now to save time!
+                if child.state == target: 
                     return backtrace_soln(child)
-                    # actions = [] #movie_ids used to get to this node - for backtracing
-                    # states = [] #person_ids
-                    # solution = [] #list of pairs (movie_id, person_id)
-
-                    # #Backtracing
-                    # #Follow parent nodes to find soln
-                    # while child.parent is not None: #when we get back to orig node, has no parent
-                    #     actions.append(child.action)
-                    #     states.append(child.state)
-                    #     child = child.parent
-
-                    # actions.reverse() #reverse (bc was goal -> initial)
-                    # states.reverse()
-
-                    # for i in range(0, len(actions)):
-                    #     solution.append((actions[i], states[i]))
-
-                    # #print(solution)
-                    # return solution #need to change this to return list of pairs
-
 
                 qFront.add(child) 
 
