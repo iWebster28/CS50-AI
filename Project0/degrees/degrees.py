@@ -160,12 +160,10 @@ def backtrace_soln(node):
         states.append(node.state)
         node = node.parent
 
-    actions.reverse() #reverse (bc was goal -> initial)
-    states.reverse()
-
     for i in range(0, len(actions)):
         solution.append((actions[i], states[i]))
-
+        
+    solution.reverse() #reverse (bc was goal -> initial)
     #print(solution)
     return solution #need to change this to return list of pairs
 
