@@ -9,6 +9,10 @@ X = "X"
 O = "O"
 EMPTY = None
 
+#Board Dimensions
+DIM = 3
+
+
 #Empty board
 def initial_state():
     """
@@ -17,6 +21,15 @@ def initial_state():
     return [[EMPTY, EMPTY, EMPTY],
             [EMPTY, EMPTY, EMPTY],
             [EMPTY, EMPTY, EMPTY]]
+
+
+#Is the board full?
+def full(board):
+    for i in range(0, DIM):
+        for j in range(0, DIM):
+            if board[i][j] == EMPTY:
+                return False
+    return True
 
 
 #Who plays next? - Implemented
@@ -33,15 +46,12 @@ def player(board):
     if terminal(board):
         return X
 
-    #Support for larger boards
     x_cnt = 0
     o_cnt = 0
-    row_len = len(board[0]) 
-    col_len = len(board[:][0])
 
     #Count Xs and Os; next player's turn is who has LEAST count.
-    for i in range(0, row_len):
-        for j in range(0, col_len):
+    for i in range(0, DIM):
+        for j in range(0, DIM):
             if board[i][j] == X:
                 x_cnt += 1
             elif board[i][j] == O:
@@ -56,21 +66,16 @@ def actions(board):
     Returns set of all possible actions (i, j) available on the board.
     """
 
-    #(i, j) tuple - where i is row; j is col
-    #0, 1, 2
+    #(i, j) tuple - where i is row; j is col; range 0, 1, 2
 
     #Ret any val if terminal board is input
-    # if board == terminal(board):
-    #     return None
+    if board == terminal(board):
+        return None
 
     actions = set()
 
-    #Support for larger boards
-    row_len = len(board[0]) 
-    col_len = len(board[:][0])
-
-    for i in range(0, row_len):
-        for j in range(0, col_len):
+    for i in range(0, DIM):
+        for j in range(0, DIM):
             if board[i][j] == EMPTY:
                 actions.add((i, j))
 
@@ -101,16 +106,61 @@ def winner(board):
     #At most 1 winner
     #no winner: ret none
 
-    #List of winning boards?
-    #win_boards = [[EMPTY, EMPTY, EMPTY],
-    #        [EMPTY, EMPTY, EMPTY],
-     #       [EMPTY, EMPTY, EMPTY]]
+    count = 0 #Track how many Xs or Os per line
 
+    #Code designed for custom grid size (ex: > 3x3 grid)
 
+    #Horizontal wins
+    for row in range(1, DIM):
+        for col in range(1, DIM):
+            if board[row][col] == board[row][col - 1]:
+                count += 1
+                winner = board[row][col]
+            else:
+                break #SHOULD BREAK OUT OF 1 LOOP ONLY
+    
+    if count == DIM:
+        return winner
 
+    #Vertical Wins
+    count = 0
+    for col in range(1, DIM):
+        for row in range(1, DIM):
+            if board[row][col] == board[row - 1][col]:
+                count += 1
+                winner = board[row][col]
+            else:
+                break 
+                
+    if count == DIM:
+        return winner
 
-    raise NotImplementedError
+    #Diagonal wins (top left to bottom right)
+    for x in range(1, DIM):
+        if board[x][x] == board[x - 1][x - 1]:
+            count += 1
+            winner = board[x][x]
+        else:
+            break
 
+    if count == DIM:
+        return winner
+
+    #Diagonal wins (top right to bottom left)
+    for row in range(1, DIM):
+        list_range = list(range(0, DIM - 1))
+        list_range.reverse()
+        for col in list_range:
+            if board[row][col] == board[row - 1][col + 1]:
+                count += 1
+                winner = board[row][col]
+            else:
+                break
+
+    if count == DIM:
+        return winner
+
+    return None
 
 #Gameover?
 def terminal(board):
@@ -119,16 +169,14 @@ def terminal(board):
     """
 
     #ret true if someone won, or if the board is full
-    #to check if board full, need actions(board) right?? but can't call it bc actions calls this fn. Endless loop
     
     #What defines endgame?
     #1. Winner
     #2. There was no winner, and full board 
 
-    #full board: actions = 0, or ... how else? 
-    #Can either keep actions here, or terminal there.
+    #full board: actions = 0, or just check board is EMPTY
 
-    if winner(board) is not None or (winner(board) is None and actions(board) is None)
+    if winner(board) is not None or full(board):
         return True
 
     #ret false if game in progress
@@ -142,13 +190,15 @@ def utility(board):
     Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
     """
 
-    #X won: utility is 1
-    #O won: " is 0
     #Assume utility called on board only if terminal(board) is True
     #(assume game over)
 
+    if winner(board) == X:
+        return 1
+    if winner(board) == O:
+        return -1
 
-    raise NotImplementedError
+    return 0
 
 
 #AI
