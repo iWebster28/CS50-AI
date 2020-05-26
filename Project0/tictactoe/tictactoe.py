@@ -3,13 +3,15 @@ Tic Tac Toe Player
 """
 
 import math
+import copy
+from exceptions import TransitionError
 
 #Moves
 X = "X"
 O = "O"
 EMPTY = None
 
-#Board Dimensions
+#Square Board Dimensions
 DIM = 3
 
 
@@ -92,8 +94,14 @@ def result(board, action):
     #Don't modify original board (bc Minimix requires diff board states!)
     #Raise exception is action not valid
 
-
-    raise NotImplementedError
+    new_board = copy.deepcopy(board)
+    
+    #Check for playable space
+    if (new_board[action[0]][action[1]] == EMPTY):
+        new_board[action[0]][action[1]] = player(new_board)
+        return new_board
+    else:
+        raise TransitionError(board, new_board, "Action invalid")
 
 
 #Who won?
@@ -208,6 +216,9 @@ def minimax(board):
     """
 
 
+
+
+    
 
 
     raise NotImplementedError
