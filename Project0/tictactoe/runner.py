@@ -113,7 +113,9 @@ while True:
             if ai_turn:
                 time.sleep(0.5)
                 move = ttt.minimax(board)
+                print("Diag move:", move)
                 board = ttt.result(board, move)
+                print("AI board:", board)
                 ai_turn = False
             else:
                 ai_turn = True
@@ -126,6 +128,7 @@ while True:
                 for j in range(3):
                     if (board[i][j] == ttt.EMPTY and tiles[i][j].collidepoint(mouse)):
                         board = ttt.result(board, (i, j))
+                        print("User board:", board)
 
         if game_over:
             againButton = pygame.Rect(width / 3, height - 65, width / 3, 50)

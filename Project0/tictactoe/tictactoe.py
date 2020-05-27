@@ -5,11 +5,13 @@ Tic Tac Toe Player
 import math
 import copy
 from exceptions import TransitionError
+import minimax_helpers as mmh
 
 #Moves
 X = "X"
 O = "O"
 EMPTY = None
+TURN = X
 
 #Square Board Dimensions
 DIM = 3
@@ -40,6 +42,8 @@ def player(board):
     Returns player who has the next turn on a board.
     """
 
+    global TURN
+
     #X has first move in intial board state
     if board == initial_state():
         return X
@@ -48,19 +52,28 @@ def player(board):
     if terminal(board):
         return X
 
-    x_cnt = 0
-    o_cnt = 0
+    if TURN == X:
+        TURN = O
+        return TURN
+    else:
+        TURN = X
+        return TURN
 
-    #Count Xs and Os; next player's turn is who has LEAST count.
-    for i in range(0, DIM):
-        for j in range(0, DIM):
-            if board[i][j] == X:
-                x_cnt += 1
-            elif board[i][j] == O:
-                o_cnt += 1
+    # x_cnt = 0
+    # o_cnt = 0
+
+    # #Count Xs and Os; next player's turn is who has LEAST count.
+    # for i in range(0, DIM):
+    #     for j in range(0, DIM):
+    #         if board[i][j] == X:
+    #             x_cnt += 1
+    #         elif board[i][j] == O:
+    #             o_cnt += 1
     
-    return X if (x_cnt < o_cnt) else O #return smaller, or O as default.
+    # return X if (x_cnt < o_cnt) else O #return smaller, or O as default.
 
+
+    
 
 #Where can anyone move?
 def actions(board):
@@ -94,10 +107,14 @@ def result(board, action):
     #Don't modify original board (bc Minimix requires diff board states!)
     #Raise exception is action not valid
 
+    #EDGE CASE: no ACTIONS
+    if action == None:
+        return board
+
     new_board = copy.deepcopy(board)
-    
-    #Check for playable space
-    if (new_board[action[0]][action[1]] == EMPTY):
+
+    #Check for playable space  
+    if (new_board[action[0]][action[1]] == EMPTY): #Redundant; in runner.py
         new_board[action[0]][action[1]] = player(new_board)
         return new_board
     else:
@@ -114,36 +131,38 @@ def winner(board):
     #At most 1 winner
     #no winner: ret none
 
-    count = 0 #Track how many Xs or Os per line
 
     #Code designed for custom grid size (ex: > 3x3 grid)
 
     #Horizontal wins
-    for row in range(1, DIM):
+    for row in range(0, DIM):
+        count = 0 #Track how many Xs or Os per line
         for col in range(1, DIM):
             if board[row][col] == board[row][col - 1]:
                 count += 1
                 winner = board[row][col]
+                if count == DIM - 1: #only DIM - 1 comparisons made
+                    return winner
             else:
                 break #SHOULD BREAK OUT OF 1 LOOP ONLY
     
-    if count == DIM:
-        return winner
 
     #Vertical Wins
-    count = 0
-    for col in range(1, DIM):
+    for col in range(0, DIM):
+        count = 0 #Reset for each col check
         for row in range(1, DIM):
             if board[row][col] == board[row - 1][col]:
+                # print(f"board[{row}][{col}]:", board[row][col])
+                # print(f"board[{row - 1}][{col}]:", board[row - 1][col])
                 count += 1
                 winner = board[row][col]
+                if count == DIM - 1:
+                    return winner
             else:
                 break 
                 
-    if count == DIM:
-        return winner
-
     #Diagonal wins (top left to bottom right)
+    count = 0
     for x in range(1, DIM):
         if board[x][x] == board[x - 1][x - 1]:
             count += 1
@@ -151,24 +170,29 @@ def winner(board):
         else:
             break
 
-    if count == DIM:
+    if count == DIM - 1:
         return winner
 
     #Diagonal wins (top right to bottom left)
-    for row in range(1, DIM):
-        list_range = list(range(0, DIM - 1))
-        list_range.reverse()
-        for col in list_range:
-            if board[row][col] == board[row - 1][col + 1]:
-                count += 1
-                winner = board[row][col]
-            else:
-                break
+    count = 0
+    row = list(range(1, DIM))
+    col = list(range(0, DIM - 1))
+    col.reverse()
 
-    if count == DIM:
+    for i in range(0, DIM - 1):
+        if board[row[i]][col[i]] == board[row[i] - 1][col[i] + 1]:
+            count += 1
+            winner = board[row[i]][col[i]]
+            # print(f"board[{row[i]}][{col[i]}]:", board[row[i]][col[i]])
+            # print(f"board[{row[i] - 1}][{col[i] + 1}]:", board[row[i] - 1][col[i] + 1])
+        else:
+            break
+
+    if count == DIM - 1:
         return winner
 
     return None
+
 
 #Gameover?
 def terminal(board):
@@ -215,10 +239,29 @@ def minimax(board):
     Returns the optimal action for the current player on the board.
     """
 
+    v = 1000000
+
+    if player(board) == O:
+        for action in actions(board):
+            if (mmh.max_val(result(board, action)) < v):
+                best_move = action
+            v = min(v, mmh.max_val(result(board, action)))
+            
+        print(best_move)
+        return best_move
 
 
+    v = -1000000
 
-    
+    if player(board) == X:
+        for action in actions(board):
+            if (mmh.min_val(result(board, action)) > v):
+                best_move = action
+            v = max(v, mmh.min_val(result(board, action)))
+            
+        print(best_move)
+        return best_move
 
+    #return mmh.min_val(board) if (player(board) == O) else mmh.max_val(board)
 
-    raise NotImplementedError
+    #raise NotImplementedError
