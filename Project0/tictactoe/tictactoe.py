@@ -239,25 +239,43 @@ def minimax(board):
     Returns the optimal action for the current player on the board.
     """
 
-    v = 1000000
+    v = float("inf")
+    lowest_max = float("inf")
+    highest_min = float("-inf")
+    depth = 0
 
-    if player(board) == O:
+
+    #Computer is O
+    if player(board) == O: #want to minimize score
         for action in actions(board):
-            if (mmh.max_val(result(board, action)) < v):
+            max_val = mmh.max_val(result(board, action), highest_min, lowest_max, depth, False)
+
+            if max_val < lowest_max: #Alpha/Beta
+                lowest_max = max_val
+
+            if (max_val < v): #minimize score
                 best_move = action
-            v = min(v, mmh.max_val(result(board, action)))
+            v = min(v, max_val)
             
         print(best_move)
         return best_move
 
 
-    v = -1000000
+    v = float("-inf")
 
-    if player(board) == X:
+    #Computer is X
+    if player(board) == X: #want to maximize score
         for action in actions(board):
-            if (mmh.min_val(result(board, action)) > v):
+            min_val = mmh.min_val(result(board, action), highest_min, lowest_max, depth, True)
+
+            if min_val > highest_min: #Alpha/Beta
+                highest_min = min_val
+
+            if (min_val > v): #maximize score
                 best_move = action
-            v = max(v, mmh.min_val(result(board, action)))
+            v = max(v, min_val)
+
+            
             
         print(best_move)
         return best_move
