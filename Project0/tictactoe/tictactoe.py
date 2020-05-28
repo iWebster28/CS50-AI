@@ -5,7 +5,7 @@ Tic Tac Toe Player
 import math
 import copy
 from exceptions import TransitionError
-import minimax_helpers as mmh
+import minimax_helpers as mmh #bad to have cyclical dependence??
 
 #Moves
 X = "X"
@@ -52,27 +52,27 @@ def player(board):
     if terminal(board):
         return X
 
-    if TURN == X:
-        TURN = O
-        return TURN
-    else:
-        TURN = X
-        return TURN
+    # if TURN == X: #prev/existing turn
+    #     TURN = O #new/next turn
+    # else:
+    #     TURN = X
+    # print("Turn:", TURN)
+    # return TURN
 
-    # x_cnt = 0
-    # o_cnt = 0
+    x_cnt = 0
+    o_cnt = 0
 
-    # #Count Xs and Os; next player's turn is who has LEAST count.
-    # for i in range(0, DIM):
-    #     for j in range(0, DIM):
-    #         if board[i][j] == X:
-    #             x_cnt += 1
-    #         elif board[i][j] == O:
-    #             o_cnt += 1
-    
-    # return X if (x_cnt < o_cnt) else O #return smaller, or O as default.
+    #Count Xs and Os; next player's turn is who has LEAST count.
+    for i in range(0, DIM):
+        for j in range(0, DIM):
+            if board[i][j] == X:
+                x_cnt += 1
+            elif board[i][j] == O:
+                o_cnt += 1\
 
-
+    if (x_cnt < o_cnt) or (x_cnt == o_cnt):
+        return X
+    return O
     
 
 #Where can anyone move?
@@ -144,7 +144,7 @@ def winner(board):
                 if count == DIM - 1: #only DIM - 1 comparisons made
                     return winner
             else:
-                break #SHOULD BREAK OUT OF 1 LOOP ONLY
+                break 
     
 
     #Vertical Wins
