@@ -41,7 +41,6 @@ def player(board):
     """
     Returns player who has the next turn on a board.
     """
-
     global TURN
 
     #X has first move in intial board state
@@ -247,15 +246,17 @@ def minimax(board):
 
     #Computer is O
     if player(board) == O: #want to minimize score
+        #modified min_val FN
         for action in actions(board):
-            max_val = mmh.max_val(result(board, action), highest_min, lowest_max, depth, False)
+            max_value = mmh.max_val(result(board, action), 
+                highest_min, lowest_max, depth, False)
 
-            if max_val < lowest_max: #Alpha/Beta
-                lowest_max = max_val
+            if (max_value < lowest_max): #Alpha beta
+                lowest_max = max_value
 
-            if (max_val < v): #minimize score
+            if (max_value < v): #minimize score
                 best_move = action
-            v = min(v, max_val)
+            v = min(v, max_value)
             
         print(best_move)
         return best_move
@@ -265,18 +266,18 @@ def minimax(board):
 
     #Computer is X
     if player(board) == X: #want to maximize score
+        #modified max_val FN
         for action in actions(board):
-            min_val = mmh.min_val(result(board, action), highest_min, lowest_max, depth, True)
+            min_value = mmh.min_val(result(board, action), 
+                highest_min, lowest_max, depth, True)
 
-            if min_val > highest_min: #Alpha/Beta
-                highest_min = min_val
+            if (min_value > highest_min): #Alpha beta
+                highest_min = min_value
 
-            if (min_val > v): #maximize score
+            if (min_value > v): #maximize score
                 best_move = action
-            v = max(v, min_val)
+            v = max(v, min_value)
 
-            
-            
         print(best_move)
         return best_move
 

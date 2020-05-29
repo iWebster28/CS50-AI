@@ -6,8 +6,8 @@ import tictactoe as ttt
 #board = ttt.initial_state()
 
 board = [[ttt.X, ttt.O, ttt.X],
-        [ttt.O, ttt.X, ttt.O],
-        [ttt.X, ttt.EMPTY, ttt.O]]
+        [ttt.O, ttt.O, ttt.X],
+        [ttt.X, ttt.EMPTY, ttt.X]]
 
 # board = [[ttt.X, ttt.O, ttt.O],
 #         [ttt.X, ttt.X, ttt.O],
