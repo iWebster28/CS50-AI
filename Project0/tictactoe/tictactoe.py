@@ -67,7 +67,7 @@ def player(board):
             if board[i][j] == X:
                 x_cnt += 1
             elif board[i][j] == O:
-                o_cnt += 1\
+                o_cnt += 1
 
     if (x_cnt < o_cnt) or (x_cnt == o_cnt):
         return X
@@ -141,6 +141,8 @@ def winner(board):
                 count += 1
                 winner = board[row][col]
                 if count == DIM - 1: #only DIM - 1 comparisons made
+                    #print(board)
+                    # print("HORIZ WIN")
                     return winner
             else:
                 break 
@@ -207,7 +209,7 @@ def terminal(board):
 
     #full board: actions = 0, or just check board is EMPTY
 
-    if winner(board) is not None or full(board):
+    if winner(board) != None or full(board):
         return True
 
     #ret false if game in progress
@@ -239,7 +241,7 @@ def minimax(board):
     """
 
     v = float("inf")
-    lowest_max = float("inf")
+    lowest_max = float("inf") #alpha beta
     highest_min = float("-inf")
     depth = 0
 
@@ -267,7 +269,7 @@ def minimax(board):
             # print(f"curr best v: {v}")
             # print(f"action:{action}")
 
-        print(best_move)
+        #print(best_move)
         return best_move
 
 
@@ -287,7 +289,7 @@ def minimax(board):
                 best_move = action
             v = max(v, min_value)
 
-        print(best_move)
+        #print(best_move)
         return best_move
 
     #return mmh.min_val(board) if (player(board) == O) else mmh.max_val(board)
