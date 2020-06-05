@@ -9,6 +9,9 @@ DEPTH_LIM = 7 #Depth-Limited Minimax: Found that 7 works best for speed + effect
 def max_val(board, highest_min, lowest_max, depth, maxBool):
 	global DEPTH_LIM
 	depth += 1
+	# for i in range(0, 3):
+	# 	print(f"Max board[{i}]:", board[i])
+	# print(f"Depth:{depth}")
 
 	if ttt.terminal(board):
 		return ttt.utility(board)
@@ -16,7 +19,7 @@ def max_val(board, highest_min, lowest_max, depth, maxBool):
 	v = float("-inf") #where v is the current best value
 
 	#Find best move for current playable actions
-	min_value = 0
+	#min_value = 0
 	for action in ttt.actions(board):
 		if (depth == DEPTH_LIM): #Depth limiting
 			return v
@@ -42,13 +45,16 @@ def max_val(board, highest_min, lowest_max, depth, maxBool):
 def min_val(board, highest_min, lowest_max, depth, maxBool):
 	global DEPTH_LIM
 	depth += 1
+	# for i in range(0, 3):
+	# 	print(f"Min board[{i}]:", board[i])
+	# print(f"Depth:{depth}")
 
 	if ttt.terminal(board):
 		return ttt.utility(board)
 
 	v = float("inf")
 
-	max_value = 0
+	#max_value = 0
 	for action in ttt.actions(board):
 		if depth == DEPTH_LIM:
 			return v

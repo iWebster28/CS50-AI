@@ -248,16 +248,25 @@ def minimax(board):
     if player(board) == O: #want to minimize score
         #modified min_val FN
         for action in actions(board):
+        #if (True):
+            # action = (2,2) #THIS SOMEHOW HAS A MAX VAL OF 1.....
+            depth = 0
             max_value = mmh.max_val(result(board, action), 
                 highest_min, lowest_max, depth, False)
 
             if (max_value < lowest_max): #Alpha beta
                 lowest_max = max_value
 
-            if (max_value < v): #minimize score
+            if (max_value <= v): #minimize score
                 best_move = action
             v = min(v, max_value)
-            
+
+
+            # print("RESULT OF ACT:", result(board, action))
+            # print(f"curr max_value:{max_value}")
+            # print(f"curr best v: {v}")
+            # print(f"action:{action}")
+
         print(best_move)
         return best_move
 
