@@ -2,7 +2,7 @@ from logic import *
 
 #Each character is either a knight or knave
 #Knight always tells truth
-#Kinght always lies
+#Knave always lies
 
 AKnight = Symbol("A is a Knight")
 AKnave = Symbol("A is a Knave")
@@ -13,11 +13,68 @@ BKnave = Symbol("B is a Knave")
 CKnight = Symbol("C is a Knight")
 CKnave = Symbol("C is a Knave")
 
+characters = [AKnight, AKnave, BKnight, BKnave, CKnight, CKnave]
+
+
 # Puzzle 0
-# A says "I am both a knight and a knave."
+# A says "I am both a knight and a knave." 
 knowledge0 = And(
-    # TODO
+    #Either a knight or a knave
+    Or(AKnight, AKnave),
+    #Or(BKnight, BKnave),
+    #Or(CKnight, CKnave),
+
+    #If A is a knight, then A is not a knave, and vice versa
+    Biconditional(AKnight, Not(AKnave)),
+
+
+    #A cannot be both a knight and a knave
+    #Not(And(AKnight, AKnave)),
+
+    #If A is a knight and a knave, then A is a knave
+    #Implication(And(AKnight, AKnave), AKnave),
+
+
+    Not(Or(BKnight, BKnave, CKnight, CKnave))
+    
+    #AKnight, AKnave
 )
+
+print(knowledge0.formula())
+
+
+
+# Or(
+#     And(AKnight, BKnave), #1 type each
+#     And(BKnight, AKnave)
+#     ), 
+
+#     Not(Or( #cannot both be same
+#     And(AKnight, AKnave), 
+#     And(BKnight, BKnave)
+#     )),
+
+#We have 1 player in Puzzle 0
+num_chars = 1
+
+#Each character is either a knight or knave
+#A -> !B
+# for i in range(num_chars * 2):
+#     if (i % 2 == 0):
+#         # print(characters[i],characters[i + 1])
+#         knowledge0.add(Implication(
+#             characters[i], Not(characters[i + 1])
+#         ))
+# #B -> !A
+# for i in range(num_chars * 2):
+#     if (i % 2 == 1):
+#         # print(characters[i],characters[i - 1])
+#         knowledge0.add(Implication(
+#             characters[i], Not(characters[i - 1])
+#         ))
+
+#Knight tells truth; Knave lies 
+
 
 # Puzzle 1
 # A says "We are both knaves."
