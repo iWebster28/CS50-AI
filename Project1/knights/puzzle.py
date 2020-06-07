@@ -15,17 +15,29 @@ CKnave = Symbol("C is a Knave")
 
 characters = [AKnight, AKnave, BKnight, BKnave, CKnight, CKnave]
 
+sentence0 = And(AKnight, AKnave) #What A says in Puzzle 0
+
 
 # Puzzle 0
 # A says "I am both a knight and a knave." 
 knowledge0 = And(
+
+    #Knight tells truth; Knave lies 
+    Implication(AKnight, sentence0),
+    Implication(AKnave, Not(sentence0)),
+
     #Either a knight or a knave
     Or(AKnight, AKnave),
     #Or(BKnight, BKnave),
     #Or(CKnight, CKnave),
 
     #If A is a knight, then A is not a knave, and vice versa
-    Biconditional(AKnight, Not(AKnave)),
+    #Biconditional(AKnight, Not(AKnave)),
+    #Biconditional(AKnave, Not(AKnight)),
+
+    #A liar
+    #Implication(And(AKnave, AKnight), AKnave),
+    #Implication(And(AKnave, AKnight), Not(AKnight)),
 
 
     #A cannot be both a knight and a knave
@@ -33,11 +45,11 @@ knowledge0 = And(
 
     #If A is a knight and a knave, then A is a knave
     #Implication(And(AKnight, AKnave), AKnave),
+    #AKnave, AKnight,
+
+    #Not(Or(BKnight, BKnave, CKnight, CKnave))
 
 
-    Not(Or(BKnight, BKnave, CKnight, CKnave))
-    
-    #AKnight, AKnave
 )
 
 print(knowledge0.formula())
@@ -72,8 +84,6 @@ num_chars = 1
 #         knowledge0.add(Implication(
 #             characters[i], Not(characters[i - 1])
 #         ))
-
-#Knight tells truth; Knave lies 
 
 
 # Puzzle 1
