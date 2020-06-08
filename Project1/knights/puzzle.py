@@ -78,8 +78,7 @@ knowledge2 = And(
 
 sentence3_A = Or(AKnight, AKnave)
 sentence3_B = And(
-    #Implication(AKnight, BKnave),
-    Implication()
+    AKnight,
     CKnave
 )
 sentence3_C = AKnight
@@ -100,7 +99,7 @@ knowledge3 = And(
     Or(CKnight, CKnave)
 )
 
-# Beter solution for multiple sentences!
+# More concise solution for multiple sentences!
 # sentences3 = [sentence3_A, sentence3_B, sentence3_C]
 # for i in range(0, len(characters)):
 #     if (i % 2 == 0):
