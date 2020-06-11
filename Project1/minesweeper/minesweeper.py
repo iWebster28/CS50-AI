@@ -101,6 +101,7 @@ class Sentence():
     def __str__(self): #Me: Format when printed
         return f"{self.cells} = {self.count}"
 
+    #CHECK
     def known_mines(self):
         """
         Returns the set of all cells in self.cells known to be mines.
@@ -199,8 +200,47 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
-        raise NotImplementedError
 
+        # `cell` is known safe and `count` are surrounding mines
+        
+        #1) Mark move made
+        self.moves_made.add(cell)
+
+        #2) Mark cell safe
+        self.mark_safe(cell)
+        #Also mark the sentence mark_safe ????
+
+        #3) add a new sentence to the AI's knowledge base
+        #   based on the value of `cell` and `count`
+
+        # But can't access game...
+        #surround = game.nearby_mines(cell)
+
+        #self.knowledge(Sentence(surround, count))
+
+        #only include cells whose state is still
+        #undetermined in the sentence????
+
+        # how to handble merging together with all the other
+        #sentences?????
+
+
+
+        #4) mark any additional cells as safe or as mines
+        #   if it can be concluded based on the AI's knowledge base
+        
+        #just the same as known_mines ????
+
+
+
+
+
+        #5) add any new sentences to the AI's knowledge base
+        #   if they can be inferred from existing knowledge
+
+
+
+    #CHECK
     def make_safe_move(self):
         """
         Returns a safe cell to choose on the Minesweeper board.
@@ -210,7 +250,12 @@ class MinesweeperAI():
         This function may use the knowledge in self.mines, self.safes
         and self.moves_made, but should not modify any of those values.
         """
-        raise NotImplementedError
+
+        if self.safes: #not empty
+            return self.safes.pop() #UNLESS BETTER WAY TO CHOOSE BEST MOVE TO MAKE???
+        else:
+            return None
+
 
     def make_random_move(self):
         """
@@ -219,4 +264,13 @@ class MinesweeperAI():
             1) have not already been chosen, and
             2) are not known to be mines
         """
-        raise NotImplementedError
+
+        for i in range(0, self.height - 1):
+            for j in range(0, self.width - 1):
+                if (i, j) not in self.moves_made and (i, j) not in self.mines:
+                    return  (i, j) #first avail. move
+        return None
+
+
+
+

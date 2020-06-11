@@ -25,3 +25,12 @@ print(test_sent)
 
 print("known mines:", test_sent.known_mines())
 print("known safes:", test_sent.known_safes())
+
+# MinesweeperAI
+
+# apple = set()
+# if apple: #set not empty
+# 	print(apple.pop())
+
+ai.mark_mine((0,0))
+print(ai.make_random_move()) #Works. Take next avail. move, (0,1)
