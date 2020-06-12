@@ -10,5 +10,5 @@ An AI TicTacToe-player with pygame, using minimax. Experimental depth-limiting a
 ## Week1/Project1 - Knowledge
 ### [Knights](./Project1/knights)
 Propositional logic puzzle solver for "Knights and Knaves" puzzles.
-### [Minesweeper](.Project1/minesweeper)
+### [Minesweeper](./Project1/minesweeper)
 AI Minesweeper-player with pygame using propositional logic.
