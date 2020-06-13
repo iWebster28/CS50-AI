@@ -211,28 +211,66 @@ class MinesweeperAI():
 
         #3) add a new sentence to the AI's knowledge base
         #   based on the value of `cell` and `count`
-        surround = self.neighbour_cells(cell)
-        self.knowledge.append(Sentence(surround, count))
-
-        #NEED TO TEST. Also implement stuff below here?
-
-        #only include cells whose state is still
-        #undetermined in the sentence????
         
-        # how to handble merging together with all the other
-        # sentences?????
+        surround = self.neighbour_cells(cell)
 
+        #Only include cells whose state is still
+        #undetermined in the sentence
+
+        #For all sentences in knowledge:
+        for sentence in self.knowledge:
+            known_safes = sentence.known_safes()
+            known_mines = sentence.known_mines()
+
+            if (known_safes != None or known_mines != None):
+
+                # Remove already-determined cells from current sentence
+                for element in sentence.cells:
+                    #Check if element is already in known safes or mines:
+                    #and moves_made??????
+                    if (element in known_safes) or (element in known_mines) or (element in self.moves_made):
+                        #Then remove from surround cells
+                        surround.remove(element)
+                    if element in known_mines:
+                        # Also need to decrement count
+
+
+                        #This logic won't work. What is the same known cell
+                        #is in multiple sentences? count decremeneted multiple times.
+                        count -= 1
+
+        self.knowledge.append(Sentence(surround, count))
+        print(Sentence(surround, count), "\n") # Diagnostic
 
 
         #4) mark any additional cells as safe or as mines
         #   if it can be concluded based on the AI's knowledge base
         
-        #just the same as known_mines ????
-
+        # Check all sentences in self.knowledge 
+        # To mark as safes or mines
+        for sentence in self.knowledge:
+            self.mines.add(sentence.known_mines())
+            self.safes.add(sentence.known_safes())
+            #CHECK THIS VALIDITY!!!!!!!!!
 
 
         #5) add any new sentences to the AI's knowledge base
         #   if they can be inferred from existing knowledge
+
+        # Check for subsets
+
+        # Is this efficient?
+        # How many iterations? if one sentence changes, 
+        # then have to check the others again?
+
+        for sent1 in self.knowledge:
+            for sent2 in self.knowledge:
+                if (sent1 != sent2):
+                    if sent1.cells.issubset(sent2.cells):
+                        self.knowledge.append(Sentence(sent2.cells.difference(sent1.cells), sent2.count - sent1.count))
+                    elif sent2.cells.issubset(sent1.cells):
+                        self.knowledge.append(Sentence(sent1.cells.difference(sent2.cells), sent1.count - sent2.count))
+
 
 
 
@@ -268,10 +306,11 @@ class MinesweeperAI():
         return None
 
 
-    # Return a set of cells that are neighbors to `cell`
     def neighbour_cells(self, cell):
+        """
+        Return a set of cells that are neighbors to `cell`
+        """
         # Similar to nearby_mines in Minesweeper class
-
         neighbours = set()
 
         # Loop over all cells within one row and column
@@ -280,7 +319,9 @@ class MinesweeperAI():
                 # Ignore the cell itself
                 if (i, j) == cell:
                     continue
-                else:
+
+                #Check bounds
+                elif (0 <= i < self.height) and (0 <= j < self.width):
                     neighbours.add((i, j))
 
         return neighbours
