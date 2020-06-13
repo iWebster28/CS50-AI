@@ -206,23 +206,21 @@ class MinesweeperAI():
         #1) Mark move made
         self.moves_made.add(cell)
 
-        #2) Mark cell safe
+        #2) Mark cell safe (and all sentences with that cell)
         self.mark_safe(cell)
-        #Also mark the sentence mark_safe ????
 
         #3) add a new sentence to the AI's knowledge base
         #   based on the value of `cell` and `count`
+        surround = self.neighbour_cells(cell)
+        self.knowledge.append(Sentence(surround, count))
 
-        # But can't access game...
-        #surround = game.nearby_mines(cell)
-
-        #self.knowledge(Sentence(surround, count))
+        #NEED TO TEST. Also implement stuff below here?
 
         #only include cells whose state is still
         #undetermined in the sentence????
-
+        
         # how to handble merging together with all the other
-        #sentences?????
+        # sentences?????
 
 
 
@@ -230,8 +228,6 @@ class MinesweeperAI():
         #   if it can be concluded based on the AI's knowledge base
         
         #just the same as known_mines ????
-
-
 
 
 
@@ -272,5 +268,21 @@ class MinesweeperAI():
         return None
 
 
+    # Return a set of cells that are neighbors to `cell`
+    def neighbour_cells(self, cell):
+        # Similar to nearby_mines in Minesweeper class
+
+        neighbours = set()
+
+        # Loop over all cells within one row and column
+        for i in range(cell[0] - 1, cell[0] + 2):
+            for j in range(cell[1] - 1, cell[1] + 2):
+                # Ignore the cell itself
+                if (i, j) == cell:
+                    continue
+                else:
+                    neighbours.add((i, j))
+
+        return neighbours
 
 

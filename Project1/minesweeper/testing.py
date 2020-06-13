@@ -26,6 +26,7 @@ print(test_sent)
 print("known mines:", test_sent.known_mines())
 print("known safes:", test_sent.known_safes())
 
+
 # MinesweeperAI
 
 # apple = set()
