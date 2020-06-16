@@ -35,3 +35,15 @@ print("known safes:", test_sent.known_safes())
 
 ai.mark_mine((0,0))
 print(ai.make_random_move()) #Works. Take next avail. move, (0,1)
+
+print("hi")
+
+# Testing list iteration that adds items to the list
+# listest = [1, 2, 3]
+# i = 3
+# for item in listest:
+# 	if i != 10:
+# 		i += 1
+# 		listest.append(i)
+
+print(listest)

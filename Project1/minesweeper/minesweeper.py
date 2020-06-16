@@ -211,36 +211,35 @@ class MinesweeperAI():
 
         #3) add a new sentence to the AI's knowledge base
         #   based on the value of `cell` and `count`
-        
-        surround = self.neighbour_cells(cell)
+
+        surround = self.neighbour_cells(cell) #Get surrounding cells
 
         #Only include cells whose state is still
         #undetermined in the sentence
 
-        #For all sentences in knowledge:
-        for sentence in self.knowledge:
-            known_safes = sentence.known_safes()
-            known_mines = sentence.known_mines()
+        #Does 4 need to happen first?
+        # for sentence in self.knowledge:
+        #     safes.add(sentence.known_safes())
+        #     mines.add(sentence.known_mines())
+        surround_copy = set()
 
-            if (known_safes != None or known_mines != None):
+        if (self.safes != None or self.mines != None):
+            # Remove already-determined cells from current sentence
+            for element in surround:
+                #Check if element is already in known safes or mines or moves_made:
+                if not((element in self.safes) or (element in self.mines) or (element in self.moves_made)):
+                    #surround.remove(element) #Then remove from surround cells
+                    surround_copy.add(element) #add undetermined elements to new list to create sentence from.
 
-                # Remove already-determined cells from current sentence
-                for element in sentence.cells:
-                    #Check if element is already in known safes or mines:
-                    #and moves_made??????
-                    if (element in known_safes) or (element in known_mines) or (element in self.moves_made):
-                        #Then remove from surround cells
-                        surround.remove(element)
-                    if element in known_mines:
-                        # Also need to decrement count
+                if element in self.mines:
+                    # Also need to decrement count
+                    count -= 1
 
+        sentence = Sentence(surround_copy, count)
+        self.knowledge.append(sentence) #Create temp sentence
 
-                        #This logic won't work. What is the same known cell
-                        #is in multiple sentences? count decremeneted multiple times.
-                        count -= 1
-
-        self.knowledge.append(Sentence(surround, count))
-        print(Sentence(surround, count), "\n") # Diagnostic
+        print("Finished 3: add sentence to knowledge based on `cell` and `count`")
+        print(sentence) # Diagnostic
 
 
         #4) mark any additional cells as safe or as mines
@@ -253,6 +252,7 @@ class MinesweeperAI():
             self.safes.add(sentence.known_safes())
             #CHECK THIS VALIDITY!!!!!!!!!
 
+        print("Finished 4: Added safes/mines to knowledge base.")
 
         #5) add any new sentences to the AI's knowledge base
         #   if they can be inferred from existing knowledge
@@ -260,19 +260,30 @@ class MinesweeperAI():
         # Check for subsets
 
         # Is this efficient?
-        # How many iterations? if one sentence changes, 
-        # then have to check the others again?
+        # Do the for loops account for the dynamic size of knowledge?
+        # How many iterations? We keep adding new sentences to end of list.
+        print("knowledge size:", len(self.knowledge))
+
+        new_knowledge = []
 
         for sent1 in self.knowledge:
             for sent2 in self.knowledge:
-                if (sent1 != sent2):
+                if (sent1 != sent2) and (sent1.cells != None) and (sent2.cells != None):
+                   
                     if sent1.cells.issubset(sent2.cells):
-                        self.knowledge.append(Sentence(sent2.cells.difference(sent1.cells), sent2.count - sent1.count))
+                        new_knowledge.append(Sentence(sent2.cells.difference(sent1.cells), sent2.count - sent1.count))
                     elif sent2.cells.issubset(sent1.cells):
-                        self.knowledge.append(Sentence(sent1.cells.difference(sent2.cells), sent1.count - sent2.count))
+                        new_knowledge.append(Sentence(sent1.cells.difference(sent2.cells), sent1.count - sent2.count))
+                    # else:
+                    #     new_knowledge.append(sent1)
+                    print("new_knowledge size:", len(new_knowledge))
 
+        #self.knowledge = new_knowledge
+        self.knowledge.extend(new_knowledge)
+        # print(new_knowledge)
 
-
+        #diagnostic
+        print("Finished 5: add any new sentences to the AI's knowledge base")
 
     #CHECK
     def make_safe_move(self):
@@ -302,7 +313,7 @@ class MinesweeperAI():
         for i in range(0, self.height - 1):
             for j in range(0, self.width - 1):
                 if (i, j) not in self.moves_made and (i, j) not in self.mines:
-                    return  (i, j) #first avail. move
+                    return (i, j) #first avail. move
         return None
 
 
