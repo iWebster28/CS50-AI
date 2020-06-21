@@ -299,7 +299,7 @@ class MinesweeperAI():
                 return safe
 
         return None
-        
+
 
     def make_random_move(self):
         """
@@ -308,11 +308,18 @@ class MinesweeperAI():
             1) have not already been chosen, and
             2) are not known to be mines
         """
-
+        moves = []
         for i in range(0, self.height - 1):
             for j in range(0, self.width - 1):
                 if (i, j) not in self.moves_made and (i, j) not in self.mines:
-                    return (i, j) #first avail. move
+                    moves.append((i, j)) #first avail. move
+        #random
+        length = len(moves)
+        #print("length:",length)
+        if length == 1:
+            return moves[0]
+        elif length != 0:
+            return moves[random.randint(0, length - 1)]
         return None
 
 
