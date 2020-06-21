@@ -101,7 +101,7 @@ class Sentence():
     def __str__(self): #Me: Format when printed
         return f"{self.cells} = {self.count}"
 
-    #CHECK
+
     def known_mines(self):
         """
         Returns the set of all cells in self.cells known to be mines.
@@ -109,8 +109,7 @@ class Sentence():
         
         if (self.count == len(self.cells)): #All mines
             return self.cells
-
-        #Else?
+        return None
 
 
     def known_safes(self):
@@ -118,11 +117,10 @@ class Sentence():
         Returns the set of all cells in self.cells known to be safe.
         """
 
-        #Corner cases
+        #Corner case
         if (self.count == 0): #No mines
-            return None
-        
-        #Else?
+            return self.cells
+        return None
 
 
     def mark_mine(self, cell):
@@ -135,6 +133,7 @@ class Sentence():
         if cell_set.issubset(self.cells): 
             self.cells.remove(cell) #set2 - set1 = count2 - count1
             self.count -= 1
+
 
     def mark_safe(self, cell):
         """
@@ -221,14 +220,14 @@ class MinesweeperAI():
         # for sentence in self.knowledge:
         #     safes.add(sentence.known_safes())
         #     mines.add(sentence.known_mines())
+
         surround_copy = set()
 
         if (self.safes != None or self.mines != None):
             # Remove already-determined cells from current sentence
             for element in surround:
-                #Check if element is already in known safes or mines or moves_made:
+                #Check if element is NOT already in known safes or mines or moves_made:
                 if not((element in self.safes) or (element in self.mines) or (element in self.moves_made)):
-                    #surround.remove(element) #Then remove from surround cells
                     surround_copy.add(element) #add undetermined elements to new list to create sentence from.
 
                 if element in self.mines:
@@ -236,8 +235,7 @@ class MinesweeperAI():
                     count -= 1
 
         sentence = Sentence(surround_copy, count)
-        self.knowledge.append(sentence) #Create temp sentence
-
+        self.knowledge.append(sentence) #Add sentence to knowledge base
         print("Finished 3: add sentence to knowledge based on `cell` and `count`")
         print(sentence) # Diagnostic
 
@@ -247,10 +245,13 @@ class MinesweeperAI():
         
         # Check all sentences in self.knowledge 
         # To mark as safes or mines
-        for sentence in self.knowledge:
-            self.mines.add(sentence.known_mines())
-            self.safes.add(sentence.known_safes())
-            #CHECK THIS VALIDITY!!!!!!!!!
+        for sentence in self.knowledge: #sets: no duplicates to worry about.
+            mines = sentence.known_mines()
+            safes = sentence.known_safes()
+            if mines != None: #Intersect the sets: add new mines/safes
+                self.mines |= mines
+            if safes != None:
+                self.safes |= safes
 
         print("Finished 4: Added safes/mines to knowledge base.")
 
@@ -284,6 +285,7 @@ class MinesweeperAI():
 
         #diagnostic
         print("Finished 5: add any new sentences to the AI's knowledge base")
+        print("--------------------------------------")
 
     #CHECK
     def make_safe_move(self):
@@ -297,7 +299,9 @@ class MinesweeperAI():
         """
 
         if self.safes: #not empty
-            return self.safes.pop() #UNLESS BETTER WAY TO CHOOSE BEST MOVE TO MAKE???
+            safe = self.safes.pop()
+            if (safe in self.moves_made):
+                return safe
         else:
             return None
 
