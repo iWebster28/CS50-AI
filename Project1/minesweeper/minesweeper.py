@@ -216,23 +216,19 @@ class MinesweeperAI():
         #Only include cells whose state is still
         #undetermined in the sentence
 
-        #Does 4 need to happen first?
-        # for sentence in self.knowledge:
-        #     safes.add(sentence.known_safes())
-        #     mines.add(sentence.known_mines())
-
         surround_copy = set()
 
-        if (self.safes != None or self.mines != None):
-            # Remove already-determined cells from current sentence
-            for element in surround:
-                #Check if element is NOT already in known safes or mines or moves_made:
-                if not((element in self.safes) or (element in self.mines) or (element in self.moves_made)):
-                    surround_copy.add(element) #add undetermined elements to new list to create sentence from.
+        #if (self.safes != None or self.mines != None):
+            
+        # Remove already-determined cells from current sentence
+        for element in surround:
+            #Check if element is NOT already in known safes or mines or moves_made:
+            if not((element in self.safes) or (element in self.mines) or (element in self.moves_made)):
+                surround_copy.add(element) #add undetermined elements to new list to create sentence from.
 
-                if element in self.mines:
-                    # Also need to decrement count
-                    count -= 1
+            if element in self.mines:
+                # Also need to decrement count
+                count -= 1
 
         sentence = Sentence(surround_copy, count)
         self.knowledge.append(sentence) #Add sentence to knowledge base
@@ -267,17 +263,17 @@ class MinesweeperAI():
 
         new_knowledge = []
 
-        for sent1 in self.knowledge:
-            for sent2 in self.knowledge:
-                if (sent1 != sent2) and (sent1.cells != None) and (sent2.cells != None):
-                    if sent1.cells.issubset(sent2.cells):
-                        new_knowledge.append(Sentence(sent2.cells.difference(sent1.cells), sent2.count - sent1.count))
-                    # print("knowledge size:", len(self.knowledge)) #Diagnostic
-                    # print("new_knowledge size:", len(new_knowledge))
+        # for sent1 in self.knowledge:
+        #     for sent2 in self.knowledge:
+        #         if (sent1 != sent2) and (sent1.cells != None) and (sent2.cells != None):
+        #             if sent1.cells.issubset(sent2.cells):
+        #                 new_knowledge.append(Sentence(sent2.cells.difference(sent1.cells), sent2.count - sent1.count))
+        #             # print("knowledge size:", len(self.knowledge)) #Diagnostic
+        #             # print("new_knowledge size:", len(new_knowledge))
 
-        #self.knowledge = new_knowledge
-        self.knowledge.extend(new_knowledge)
-        # print(new_knowledge)
+        # #self.knowledge = new_knowledge
+        # self.knowledge.extend(new_knowledge)
+        # # print(new_knowledge)
 
         #diagnostic
         print("knowledge size after 5:", len(self.knowledge))
@@ -298,13 +294,12 @@ class MinesweeperAI():
         and self.moves_made, but should not modify any of those values.
         """
 
-        if self.safes: #not empty
-            safe = self.safes.pop()
-            if (safe in self.moves_made):
+        for safe in self.safes:
+            if safe not in self.moves_made:
                 return safe
-        else:
-            return None
 
+        return None
+        
 
     def make_random_move(self):
         """

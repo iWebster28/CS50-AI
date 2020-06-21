@@ -46,4 +46,11 @@ print("hi")
 # 		i += 1
 # 		listest.append(i)
 
-print(listest)
+#print(listest)
+
+
+setest = set([0, 1, 2])
+print("test set:")
+for i in setest:
+	print(i)
+
