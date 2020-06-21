@@ -263,27 +263,27 @@ class MinesweeperAI():
         # Is this efficient?
         # Do the for loops account for the dynamic size of knowledge?
         # How many iterations? We keep adding new sentences to end of list.
-        print("knowledge size:", len(self.knowledge))
+        print("knowledge size before 5:", len(self.knowledge))
 
         new_knowledge = []
 
         for sent1 in self.knowledge:
             for sent2 in self.knowledge:
                 if (sent1 != sent2) and (sent1.cells != None) and (sent2.cells != None):
-                   
                     if sent1.cells.issubset(sent2.cells):
                         new_knowledge.append(Sentence(sent2.cells.difference(sent1.cells), sent2.count - sent1.count))
-                    elif sent2.cells.issubset(sent1.cells):
-                        new_knowledge.append(Sentence(sent1.cells.difference(sent2.cells), sent1.count - sent2.count))
-                    # else:
-                    #     new_knowledge.append(sent1)
-                    print("new_knowledge size:", len(new_knowledge))
+                    # print("knowledge size:", len(self.knowledge)) #Diagnostic
+                    # print("new_knowledge size:", len(new_knowledge))
 
         #self.knowledge = new_knowledge
         self.knowledge.extend(new_knowledge)
         # print(new_knowledge)
 
         #diagnostic
+        print("knowledge size after 5:", len(self.knowledge))
+        print("Safes:", self.safes)
+        print("Mines:", self.mines)
+
         print("Finished 5: add any new sentences to the AI's knowledge base")
         print("--------------------------------------")
 
