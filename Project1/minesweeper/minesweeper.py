@@ -214,7 +214,6 @@ class MinesweeperAI():
 
         #Only include cells whose state is still 
         #undetermined in the sentence
-
         surround_copy = set()
 
         # Remove already-determined cells from current sentence
@@ -229,9 +228,6 @@ class MinesweeperAI():
 
         sentence = Sentence(surround_copy, count)
         self.knowledge.append(sentence) #Add sentence to knowledge base
-        # print("Finished 3: add sentence to knowledge based on `cell` and `count`")
-        # print(sentence) # Diagnostic
-
 
         #4) mark any additional cells as safe or as mines
         #   if it can be concluded based on the AI's knowledge base
@@ -246,13 +242,8 @@ class MinesweeperAI():
             if safes != None:
                 self.safes |= safes
 
-        # print("Finished 4: Added safes/mines to knowledge base.")
-
         #5) add any new sentences to the AI's knowledge base
         #   if they can be inferred from existing knowledge
-
-        # print("knowledge size before 5:", len(self.knowledge))
-
         new_knowledge = []
 
         # Check for subsets
@@ -261,22 +252,11 @@ class MinesweeperAI():
                 if (sent1 != sent2) and (sent1.cells != None) and (sent2.cells != None):
                     if sent1.cells.issubset(sent2.cells):
                         new_knowledge.append(Sentence(sent2.cells.difference(sent1.cells), sent2.count - sent1.count))
-                    # print("knowledge size:", len(self.knowledge)) #Diagnostic
-                    # print("new_knowledge size:", len(new_knowledge))
 
         #add this interpreted new_knowledge back to self.knowledge
         for sentence in new_knowledge:
             if sentence not in self.knowledge:
                 self.knowledge.append(sentence)
-
-        #diagnostic
-        # print("knowledge size after 5:", len(self.knowledge))
-        # print("Safes:", self.safes)
-        # print("Mines:", self.mines)
-
-        # print("Finished 5: add any new sentences to the AI's knowledge base")
-        # print("--------------------------------------")
-
 
     def make_safe_move(self):
         """
@@ -336,4 +316,3 @@ class MinesweeperAI():
                     neighbours.add((i, j))
 
         return neighbours
-

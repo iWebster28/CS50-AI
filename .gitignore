@@ -7,3 +7,13 @@ Project1/knights/src1/logic.py
 Project1/knights/src1/harry.py
 Project1/knights/src1/clue.py
 Project1/knights/src1/__pycache__/logic.cpython-38.pyc
+Project2/.DS_Store
+Project2/src2/.DS_Store
+Project2/src2/bayesnet/inference.py
+Project2/src2/bayesnet/likelihood.py
+Project2/src2/bayesnet/model.py
+Project2/src2/bayesnet/sample.py
+Project2/src2/chain/model.py
+Project2/src2/hmm/model.py
+Project2/src2/hmm/sequence.py
+Project2/.DS_Store
