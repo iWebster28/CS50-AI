@@ -6,6 +6,9 @@ import sys
 DAMPING = 0.85
 SAMPLES = 10000
 
+# PageRank = probability that a random surfer is on a 
+# page at a given time
+
 
 def main():
     if len(sys.argv) != 2:
@@ -57,7 +60,36 @@ def transition_model(corpus, page, damping_factor):
     linked to by `page`. With probability `1 - damping_factor`, choose
     a link at random chosen from all pages in the corpus.
     """
-    raise NotImplementedError
+
+    model = dict()
+    N = len(corpus) # total num pages in corpus
+    num_links = numLinks(corpus, page) # links on `page`
+    # print(num_links) #Diag
+
+    #If no outgoing links, then return EVEN prob. dist. (choose rand among all pages equally)
+    if num_links == 0:
+        for pg in corpus:
+            model[pg] = 1/N
+
+    else:
+        # Build dictionary
+        for pg in corpus: # For any page in the corpus
+            model[pg] = (1 - damping_factor)/N
+
+        for pg in corpus[page]: # For outbound links on `page`
+            model[pg] += damping_factor/num_links
+        
+    # Return dict w prob. dist. over which page a rand. surfer would visit next
+    return model
+
+
+def numLinks(corpus, page):
+    """
+    Get the number of links on a given page
+    """
+
+    return len(corpus[page])
+
 
 
 def sample_pagerank(corpus, damping_factor, n):
@@ -69,7 +101,21 @@ def sample_pagerank(corpus, damping_factor, n):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+
+    # Assume n is >= 1
+
+    # Generate 1st sample by randomly choosing page
+    # For each other sample: generate next samp. based on prev. using transition model
+    #transition_model
+
+
+
+
+
+
+
+
+    #raise NotImplementedError
 
 
 def iterate_pagerank(corpus, damping_factor):
@@ -81,7 +127,23 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+
+    # Start: assign each page rank 1/N (N = num pages in corpus)
+
+    # Based on curr. rank vals, calc. new rank vals. using PageRank formula
+
+    # Page with no links = interpret as having 
+    #1 link for every page in corpus, including itself
+
+    # Continue until PageRanks accurate within 0.001
+
+
+
+
+
+
+
+    #raise NotImplementedError
 
 
 if __name__ == "__main__":
