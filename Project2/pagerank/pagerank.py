@@ -3,6 +3,8 @@ import random
 import re
 import sys
 
+from numpy.random import choice
+
 DAMPING = 0.85
 SAMPLES = 10000
 
@@ -74,7 +76,7 @@ def transition_model(corpus, page, damping_factor):
     else:
         # Build dictionary
         for pg in corpus: # For any page in the corpus
-            model[pg] = (1 - damping_factor)/N
+            model[pg] = (1 - damping_factor)/N # Base probability that we visit any page
 
         for pg in corpus[page]: # For outbound links on `page`
             model[pg] += damping_factor/num_links
@@ -91,7 +93,6 @@ def numLinks(corpus, page):
     return len(corpus[page])
 
 
-
 def sample_pagerank(corpus, damping_factor, n):
     """
     Return PageRank values for each page by sampling `n` pages
@@ -104,18 +105,42 @@ def sample_pagerank(corpus, damping_factor, n):
 
     # Assume n is >= 1
 
-    # Generate 1st sample by randomly choosing page
-    # For each other sample: generate next samp. based on prev. using transition model
-    #transition_model
+    # want to track how many times each page has shown up in
+    # a sample.
+    samples = dict()
+    
+    # Initialize all sample values to 0 (intial probability)
+    for pg in corpus:
+        samples[pg] = 0
+        
+    N = len(corpus) # num pages in corpus
 
+    # Generate 1st sample by randomly choosing a page
+    prev_pg = random.choice(list(corpus))
+    samples[prev_pg] += 1
 
+    # For each other sample: generate next samp. based on prev. 
+    # using transition model
+    for sample in range(0, n):
 
+        # Get transition model from previous page
+        next_proba = transition_model(corpus, prev_pg, damping_factor)
 
+        # Choose random page (key) from probabilities - 
+        # RANDOM based on the probabilities (values) given
+        next_pg = random.choices(list(next_proba), next_proba.values())[0]
+        #print(next_pg)
+        samples[next_pg] += 1 
+        prev_pg = next_pg
 
+    # Divide all samples by n (total num samples) to get probabilities
+    # _sum = 0
+    for pg in corpus:
+        samples[pg] /= n
+        # _sum += samples[pg]
 
-
-
-    #raise NotImplementedError
+    # print(_sum)
+    return samples    
 
 
 def iterate_pagerank(corpus, damping_factor):
