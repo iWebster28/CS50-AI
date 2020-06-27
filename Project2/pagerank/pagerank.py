@@ -3,10 +3,12 @@ import random
 import re
 import sys
 
+import copy
 from numpy.random import choice
 
 DAMPING = 0.85
 SAMPLES = 10000
+THRESHOLD = 0.001
 
 # PageRank = probability that a random surfer is on a 
 # page at a given time
@@ -106,9 +108,9 @@ def sample_pagerank(corpus, damping_factor, n):
     # Assume n is >= 1
 
     # want to track how many times each page has shown up in
-    # a sample.
+    #a sample.
     samples = dict()
-    
+
     # Initialize all sample values to 0 (intial probability)
     for pg in corpus:
         samples[pg] = 0
@@ -120,7 +122,7 @@ def sample_pagerank(corpus, damping_factor, n):
     samples[prev_pg] += 1
 
     # For each other sample: generate next samp. based on prev. 
-    # using transition model
+    #using transition model
     for sample in range(0, n):
 
         # Get transition model from previous page
@@ -130,7 +132,7 @@ def sample_pagerank(corpus, damping_factor, n):
         # RANDOM based on the probabilities (values) given
         next_pg = random.choices(list(next_proba), next_proba.values())[0]
         #print(next_pg)
-        samples[next_pg] += 1 
+        samples[next_pg] += 1 # This page has been sampled again; increment count
         prev_pg = next_pg
 
     # Divide all samples by n (total num samples) to get probabilities
@@ -153,22 +155,49 @@ def iterate_pagerank(corpus, damping_factor):
     PageRank values should sum to 1.
     """
 
+    pages = dict()
+    N = len(corpus)
+    avg_diff = 1
+
     # Start: assign each page rank 1/N (N = num pages in corpus)
+    for pg in corpus:
+        pages[pg] = 1/N
 
-    # Based on curr. rank vals, calc. new rank vals. using PageRank formula
+    # Continue until PageRanks accurate within 0.001 = THRESHOLD
+    while avg_diff > THRESHOLD:
+        prev_pages = copy.deepcopy(pages)
 
-    # Page with no links = interpret as having 
-    #1 link for every page in corpus, including itself
+        # Based on curr. rank vals, calc. new rank vals. using PageRank formula
+        for pg in corpus:
+            pages[pg] = PR(corpus, damping_factor, pg)
 
-    # Continue until PageRanks accurate within 0.001
+        # avg_diff = avg(pages(all vals) - prev_pages(all vals))
+        avg_diff = np.subtract(pages.values(), prev_pages.values())
+        avg_diff = np.absolute(avg_diff)
+        # Get average 
+        avg_diff = np.average(avg_diff)
+        print(avg_diff)
 
+    return pages
 
+def PR(corpus, damping_factor, page):
+    """
+    Calculate page rank based on iterative algorithm
+    """
 
+    cumulative_rank = 0
 
+    for pg in corpus:
+        if pg != page:
+            num_links = numLinks(corpus, pg)
+            # If 0, treat as having a link to every page in corpus, including itself.
+            if num_links == 0:
+                num_links = len(corpus)
 
+            cumulative_rank += PR(corpus, damping_factor, pg)/num_links
 
-
-    #raise NotImplementedError
+    pagerank = (1 - damping_factor)/N + (damping_factor * cumulative_rank)
+    return pagerank
 
 
 if __name__ == "__main__":
