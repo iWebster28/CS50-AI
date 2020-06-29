@@ -4,7 +4,7 @@ import re
 import sys
 
 import copy
-from numpy.random import choice
+import numpy as np
 
 DAMPING = 0.85
 SAMPLES = 10000
@@ -157,44 +157,58 @@ def iterate_pagerank(corpus, damping_factor):
 
     pages = dict()
     N = len(corpus)
-    avg_diff = 1
 
     # Start: assign each page rank 1/N (N = num pages in corpus)
     for pg in corpus:
         pages[pg] = 1/N
 
     # Continue until PageRanks accurate within 0.001 = THRESHOLD
-    while avg_diff > THRESHOLD:
+    cont = True
+    while cont:
         prev_pages = copy.deepcopy(pages)
 
         # Based on curr. rank vals, calc. new rank vals. using PageRank formula
         for pg in corpus:
-            pages[pg] = PR(corpus, damping_factor, pg)
+            pages[pg] = PR(corpus, damping_factor, pg, prev_pages) #pass in pages of prev_pages??? calc. based on constantly updated values or no?
 
-        # avg_diff = avg(pages(all vals) - prev_pages(all vals))
-        avg_diff = np.subtract(pages.values(), prev_pages.values())
-        avg_diff = np.absolute(avg_diff)
-        # Get average 
-        avg_diff = np.average(avg_diff)
-        print(avg_diff)
+            # NOT FASTER.... method to detect once all items are <= threshold.
+            # Once no items are greater than the threshold, stop.
+            # pageranks_np = np.array(list(pages.values()))
+            # if len(pageranks_np[pageranks_np > THRESHOLD]) == 0:
+            #     cont = False
+
+
+        # Get differences in curr. vals from prev.
+        # print(list(pages.values()))
+        # print(list(prev_pages.values()))
+        diff = np.subtract(list(pages.values()), list(prev_pages.values()))
+        diff = np.absolute(diff)
+        print(prev_pages.values())
+        #print(diff)
+
+        # Once no items are greater than the threshold, stop.
+        if len(diff[diff > THRESHOLD]) == 0:
+            cont = False
 
     return pages
 
-def PR(corpus, damping_factor, page):
+def PR(corpus, damping_factor, page, prev_pages): # where prev_pages are previous page ranks.
     """
     Calculate page rank based on iterative algorithm
     """
 
     cumulative_rank = 0
-
-    for pg in corpus:
+    N = len(corpus)
+    
+    for pg in corpus: #pg = i
         if pg != page:
             num_links = numLinks(corpus, pg)
             # If 0, treat as having a link to every page in corpus, including itself.
             if num_links == 0:
                 num_links = len(corpus)
 
-            cumulative_rank += PR(corpus, damping_factor, pg)/num_links
+            #cumulative_rank += PR(corpus, damping_factor, pg)/num_links
+            cumulative_rank += prev_pages[pg]/num_links #prev_pages[pg] = PR(i)
 
     pagerank = (1 - damping_factor)/N + (damping_factor * cumulative_rank)
     return pagerank
