@@ -139,7 +139,7 @@ def sample_pagerank(corpus, damping_factor, n):
     for pg in corpus:
         samples[pg] /= n
 
-    #check_sum(samples)
+    check_sum(samples)
 
     return samples    
 
@@ -178,7 +178,7 @@ def iterate_pagerank(corpus, damping_factor):
         if len(diff[diff > THRESHOLD]) == 0:
             cont = False
 
-    # check_sum(pages)
+    check_sum(pages)
 
     return pages
 
@@ -192,11 +192,14 @@ def PR(corpus, damping_factor, page, prev_pages): # where prev_pages are previou
     N = len(corpus)
 
     # Find sum from other pageranks of pages that link to `page`
-    # how to find pages that link to `page` ??
+    # how to find pages that link to `page`?
     linked = set(
             pg for pg in corpus # Check every page in corpus if it links to `page`
             if page in corpus[pg] # if pg contains any links to `page`!
         )
+    
+    # print("Page to rank:", page)
+    # print('linked pages:', linked)
 
     for pg in linked: #pg = i
         if pg != page:
@@ -208,6 +211,7 @@ def PR(corpus, damping_factor, page, prev_pages): # where prev_pages are previou
             cumulative_rank += prev_pages[pg]/num_links #prev_pages[pg] = PR(i)
 
     pagerank = (1 - damping_factor)/N + (damping_factor * cumulative_rank)
+    # print("==========")
     return pagerank
 
 
