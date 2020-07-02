@@ -136,12 +136,11 @@ def sample_pagerank(corpus, damping_factor, n):
         prev_pg = next_pg
 
     # Divide all samples by n (total num samples) to get probabilities
-    # _sum = 0
     for pg in corpus:
         samples[pg] /= n
-        # _sum += samples[pg]
 
-    # print(_sum)
+    #check_sum(samples)
+
     return samples    
 
 
@@ -171,26 +170,18 @@ def iterate_pagerank(corpus, damping_factor):
         for pg in corpus:
             pages[pg] = PR(corpus, damping_factor, pg, prev_pages) #pass in pages of prev_pages??? calc. based on constantly updated values or no?
 
-            # NOT FASTER.... method to detect once all items are <= threshold.
-            # Once no items are greater than the threshold, stop.
-            # pageranks_np = np.array(list(pages.values()))
-            # if len(pageranks_np[pageranks_np > THRESHOLD]) == 0:
-            #     cont = False
-
-
-        # Get differences in curr. vals from prev.
-        # print(list(pages.values()))
-        # print(list(prev_pages.values()))
+        # Track differences in curr/prev rankings
         diff = np.subtract(list(pages.values()), list(prev_pages.values()))
         diff = np.absolute(diff)
-        print(prev_pages.values())
-        #print(diff)
 
         # Once no items are greater than the threshold, stop.
         if len(diff[diff > THRESHOLD]) == 0:
             cont = False
 
+    # check_sum(pages)
+
     return pages
+
 
 def PR(corpus, damping_factor, page, prev_pages): # where prev_pages are previous page ranks.
     """
@@ -199,19 +190,35 @@ def PR(corpus, damping_factor, page, prev_pages): # where prev_pages are previou
 
     cumulative_rank = 0
     N = len(corpus)
-    
-    for pg in corpus: #pg = i
+
+    # Find sum from other pageranks of pages that link to `page`
+    # how to find pages that link to `page` ??
+    linked = set(
+            pg for pg in corpus # Check every page in corpus if it links to `page`
+            if page in corpus[pg] # if pg contains any links to `page`!
+        )
+
+    for pg in linked: #pg = i
         if pg != page:
             num_links = numLinks(corpus, pg)
             # If 0, treat as having a link to every page in corpus, including itself.
             if num_links == 0:
                 num_links = len(corpus)
 
-            #cumulative_rank += PR(corpus, damping_factor, pg)/num_links
             cumulative_rank += prev_pages[pg]/num_links #prev_pages[pg] = PR(i)
 
     pagerank = (1 - damping_factor)/N + (damping_factor * cumulative_rank)
     return pagerank
+
+
+def check_sum(pages):
+    """
+    Check probabilities sum to 1
+    """
+    _sum = 0
+    for pg in pages:
+        _sum += pages[pg]
+    print("Sum of Probabilities:", _sum)
 
 
 if __name__ == "__main__":
