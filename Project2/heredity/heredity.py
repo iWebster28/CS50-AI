@@ -13,7 +13,7 @@ PROBS = {
 
     "trait": {
 
-        # Probability of trait given two copies of gene
+        # Probability of trait given two copies of gene (EX: PROBS["trait"][2])
         2: {
             True: 0.65,
             False: 0.35
@@ -62,12 +62,18 @@ def main():
 
     # Loop over all sets of people who might have the trait
     names = set(people)
+    # Diag
+    print("probabilities:", probabilities)
+    print("people", people)
+    print("names", names)
+    print("powerset of name", powerset(names))
+
     for have_trait in powerset(names):
 
         # Check if current set of people violates known information
         fails_evidence = any(
-            (people[person]["trait"] is not None and
-             people[person]["trait"] != (person in have_trait))
+            (people[person]["trait"] is not None and #None means we don't know if they have the trait
+             people[person]["trait"] != (person in have_trait)) #???
             for person in names
         )
         if fails_evidence:
@@ -139,6 +145,9 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone in set `have_trait` has the trait, and
         * everyone not in set` have_trait` does not have the trait.
     """
+
+
+
     raise NotImplementedError
 
 
@@ -149,6 +158,10 @@ def update(probabilities, one_gene, two_genes, have_trait, p):
     Which value for each distribution is updated depends on whether
     the person is in `have_gene` and `have_trait`, respectively.
     """
+
+
+
+
     raise NotImplementedError
 
 
@@ -157,7 +170,27 @@ def normalize(probabilities):
     Update `probabilities` such that each probability distribution
     is normalized (i.e., sums to 1, with relative proportions the same).
     """
-    raise NotImplementedError
+    for person in probabilities:
+        normalize_helper(probabilities, person, "gene") # Normalize gene probabilities
+        normalize_helper(probabilities, person, "trait") # Normalize trait probabilities
+    # print(probabilities)
+
+
+def normalize_helper(probabilities, person, field):
+    """
+    Where field is the field get probabilities from, gene or trait
+    """
+    sum_prob = 0
+
+    for item in probabilities[person][field]:
+        # print("value:", probabilities[person][field][item])
+        sum_prob += probabilities[person][field][item]
+    for item in probabilities[person][field]: #Normalize
+        if (sum_prob != 0): #Check for division by 0
+            probabilities[person][field][item] = probabilities[person][field][item]/sum_prob
+        else:
+            print("Division by 0: Probabilities summed to 0.")
+   
 
 
 if __name__ == "__main__":

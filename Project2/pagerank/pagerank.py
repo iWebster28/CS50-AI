@@ -163,7 +163,9 @@ def iterate_pagerank(corpus, damping_factor):
 
     # Continue until PageRanks accurate within 0.001 = THRESHOLD
     cont = True
+    iterations = 0
     while cont:
+        iterations += 1
         prev_pages = copy.deepcopy(pages)
 
         # Based on curr. rank vals, calc. new rank vals. using PageRank formula
@@ -179,6 +181,7 @@ def iterate_pagerank(corpus, damping_factor):
             cont = False
 
     check_sum(pages)
+    # print('iterations:', iterations)
 
     return pages
 
@@ -197,7 +200,7 @@ def PR(corpus, damping_factor, page, prev_pages): # where prev_pages are previou
             pg for pg in corpus # Check every page in corpus if it links to `page`
             if page in corpus[pg] # if pg contains any links to `page`!
         )
-    
+
     # print("Page to rank:", page)
     # print('linked pages:', linked)
 
