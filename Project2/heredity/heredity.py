@@ -148,6 +148,7 @@ def joint_probability(people, one_gene, two_genes, have_trait):
 
 
 
+
     raise NotImplementedError
 
 
@@ -159,10 +160,19 @@ def update(probabilities, one_gene, two_genes, have_trait, p):
     the person is in `have_gene` and `have_trait`, respectively.
     """
 
+    # Each person should have their "gene" and "trait" distributions updated.
+    for person in probabilities:
+        if person in one_gene:
+            probabilities[person]["gene"][1] += p
+        if person in two_genes:
+            probabilities[person]["gene"][2] += p
+        if (person not in one_gene) and (person not in two_genes):
+            probabilities[person]["gene"][0] += p #Check
 
-
-
-    raise NotImplementedError
+        if person in have_trait:
+            probabilities[person]["trait"][True] += p
+        if person not in have_trait:
+            probabilities[person]["trait"][False] += p #Check
 
 
 def normalize(probabilities):
@@ -182,9 +192,11 @@ def normalize_helper(probabilities, person, field):
     """
     sum_prob = 0
 
+    # Sum all values to get denominator for normalizing later.
     for item in probabilities[person][field]:
         # print("value:", probabilities[person][field][item])
         sum_prob += probabilities[person][field][item]
+
     for item in probabilities[person][field]: #Normalize
         if (sum_prob != 0): #Check for division by 0
             probabilities[person][field][item] = probabilities[person][field][item]/sum_prob
