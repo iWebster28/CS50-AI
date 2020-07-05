@@ -1,6 +1,6 @@
 #testing.py
 
-people = {"Harry", "Lily", "James"}
+people = {"Harry", "Lily", "James"} #Actually names
 
 probabilities = {
         person: {
@@ -26,6 +26,11 @@ def normalize():
         normalize_helper(probabilities, person, "gene") # Normalize gene probabilities
         normalize_helper(probabilities, person, "trait") # Normalize trait probabilities
     print(probabilities)
+
+    # person = "Dave"
+    # have_trait = {"da", "aj"}
+    # if person not in have_trait:
+    #     print("Hi")
     return
 
 def normalize_helper(probabilities, person, field):
