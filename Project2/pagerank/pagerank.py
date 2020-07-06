@@ -139,7 +139,7 @@ def sample_pagerank(corpus, damping_factor, n):
     for pg in corpus:
         samples[pg] /= n
 
-    check_sum(samples)
+    samples = check_sum(samples)
 
     return samples    
 
@@ -163,9 +163,7 @@ def iterate_pagerank(corpus, damping_factor):
 
     # Continue until PageRanks accurate within 0.001 = THRESHOLD
     cont = True
-    iterations = 0
     while cont:
-        iterations += 1
         prev_pages = copy.deepcopy(pages)
 
         # Based on curr. rank vals, calc. new rank vals. using PageRank formula
@@ -179,9 +177,9 @@ def iterate_pagerank(corpus, damping_factor):
         # Once no items are greater than the threshold, stop.
         if len(diff[diff > THRESHOLD]) == 0:
             cont = False
-
-    check_sum(pages)
-    # print('iterations:', iterations)
+    
+    # Check sum to 1 and normalize if needed
+    pages = check_sum(pages)
 
     return pages
 
@@ -225,7 +223,22 @@ def check_sum(pages):
     _sum = 0
     for pg in pages:
         _sum += pages[pg]
-    print("Sum of Probabilities:", _sum)
+    _sum = round(_sum, 1)
+    # print("Sum of Probabilities:", _sum)
+    if _sum == 1:
+        return pages
+    else: # Need to normalize
+        return normalize(pages)
+
+
+def normalize(pages): #LISTS AND DICTIONARIES ARE NOT LIKE "C++ PASS-BY-REFERENCE" IN PYTHON! https://news.ycombinator.com/item?id=979693
+    """
+    Normalize page rank values if not sum to 1
+    """
+    denom = sum(pages.values())
+    pages = {key: value/denom for key, value in pages.items()}
+    # print("Normalize Sum:", sum(pages.values()))
+    return pages
 
 
 if __name__ == "__main__":
