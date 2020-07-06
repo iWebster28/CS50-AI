@@ -73,7 +73,7 @@ def main():
         # Check if current set of people violates known information
         fails_evidence = any(
             (people[person]["trait"] is not None and #None means we don't know if they have the trait
-             people[person]["trait"] != (person in have_trait)) #???
+             people[person]["trait"] != (person in have_trait))
             for person in names
         )
         if fails_evidence:
@@ -199,8 +199,13 @@ def joint_probability(people, one_gene, two_genes, have_trait):
             from_dad = abs(dad_genes/2 - PROBS["mutation"])
             not_from_dad = abs(1 - from_dad)
 
-            # Multiply parent cases
-            gene_prob = (not_from_mom * from_dad) + (not_from_dad * from_mom)
+            # Did mother and/or father give genes?
+            if (person_genes == 1): #Only 1 parent contributes
+                gene_prob = (not_from_mom * from_dad) + (not_from_dad * from_mom)
+            elif (person_genes == 2): #2 parents contribute
+                gene_prob = from_mom * from_dad
+            else: #0 genes
+                gene_prob = not_from_mom * not_from_dad
 
         # Check if has trait (for later)
         has_trait = True if (person in have_trait) else False
