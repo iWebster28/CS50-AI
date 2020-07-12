@@ -123,16 +123,23 @@ class CrosswordCreator():
         # Leave y dom unchanged
 
         revised = False
+
+        # Check all possible values in y's dom to see if ANY overlap with curr x_val in x's dom
+        # If at the end, no y_val in y's dom overlaps with x's x_val, then delete x's x_val.
         for x_val in self.domains[x].copy():
-            # Check all possible values in y's dom to see if ANY overlap with curr x_val in x's dom
-            # If at the end, no y_val in y's dom overlaps with x's x_val, then delete x's x_val.
-                
             # Vals in y's dom that satisfy the binary constraint for the current x val
             # If this set is empty, then we don't satisfy x val's dom.
             valid_y_vals = set(
                 y_val for y_val in self.domains[y]
                 if self.crossword.overlaps[x_val, y_val] != None # means we satisfy bin. constr.
-            )
+            ) 
+            # issue above: overlaps is for VARs, not vals.
+            # Do have to temporarily assign the vals to to VARs to check??
+
+
+
+
+
 
             # If the y_val in y's dom doesn't satisfy the curr x_val 
             # in x's dom, remove x_val
@@ -154,8 +161,29 @@ class CrosswordCreator():
         """
 
         # arcs = intial list of arcs to process
-        # If none, start with queue all arcrcs in list `arcs` 
+        # If none, start with queue all arcs in list `arcs` 
         # Each arc is tuple (x, y) of var x and diff var y
+        queue = []
+
+
+
+        if arcs == None:
+
+            # Append all arcs
+            for x_var in self.crossword.variables:
+                for y_var in self.crossword.variables:
+                    if x_var != y_var:
+                        queue.append((x_var, y_var))
+
+            # What are the arcs exactly?????
+            # queue.extend(set(
+            #     )
+
+            # )         # Start with intial list of all arcs in problem
+       
+
+        else: 
+            queue.extend(arcs)
 
         # Revise each arc in queue one at a time
         # If make change to dom, need to add more arcs to queue to ensure other 
@@ -168,12 +196,15 @@ class CrosswordCreator():
 
         # Ignore word "uniqueness"????
 
+        while queue != None:
+            (x, y) = queue.pop()
+            if self.revise(x, y): 
+                if len(self.domains[x]) == 0:
+                    return False
+                for z in (neighbors(self, x) - y):
+                    queue.append((z, x)) # Add arcs back to queue
+        return True
 
-
-
-
-
-        raise NotImplementedError
 
     def assignment_complete(self, assignment):
         """
