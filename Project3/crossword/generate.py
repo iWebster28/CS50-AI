@@ -1,4 +1,5 @@
 import sys
+import copy
 
 from crossword import *
 
@@ -129,17 +130,12 @@ class CrosswordCreator():
         for x_val in self.domains[x].copy():
             # Vals in y's dom that satisfy the binary constraint for the current x val
             # If this set is empty, then we don't satisfy x val's dom.
-            valid_y_vals = set(
-                y_val for y_val in self.domains[y]
-                if self.crossword.overlaps[x_val, y_val] != None # means we satisfy bin. constr.
-            ) 
-            # issue above: overlaps is for VARs, not vals.
-            # Do have to temporarily assign the vals to to VARs to check??
+            valid_y_vals = set()
 
-
-
-
-
+            for y_val in self.domains[y]:
+                y_var = Variable(y.i, y.j, y.direction, len(y_val)) # Check overlaps
+                if self.crossword.overlaps[x, y_var] != None:
+                    valid_y_vals.add(y_val)
 
             # If the y_val in y's dom doesn't satisfy the curr x_val 
             # in x's dom, remove x_val
@@ -165,23 +161,12 @@ class CrosswordCreator():
         # Each arc is tuple (x, y) of var x and diff var y
         queue = []
 
-
-
         if arcs == None:
-
-            # Append all arcs
+            # Append all arcs - are these arcs generated correctly?
             for x_var in self.crossword.variables:
                 for y_var in self.crossword.variables:
                     if x_var != y_var:
-                        queue.append((x_var, y_var))
-
-            # What are the arcs exactly?????
-            # queue.extend(set(
-            #     )
-
-            # )         # Start with intial list of all arcs in problem
-       
-
+                        queue.append((x_var, y_var))    
         else: 
             queue.extend(arcs)
 
@@ -189,19 +174,19 @@ class CrosswordCreator():
         # If make change to dom, need to add more arcs to queue to ensure other 
         #arcs remain consistent
 
-        # Call "revise" fn
-
         # If all rem. values removed from dom, return False (can't solve problem)
         # Else, return True
 
-        # Ignore word "uniqueness"????
-
-        while queue != None:
+        count = 0
+        while len(queue) != 0:
+            # print('------', queue)
+            # count += 1
+            # print(count)
             (x, y) = queue.pop()
             if self.revise(x, y): 
                 if len(self.domains[x]) == 0:
                     return False
-                for z in (neighbors(self, x) - y):
+                for z in (self.neighbors(x) - y):
                     queue.append((z, x)) # Add arcs back to queue
         return True
 
