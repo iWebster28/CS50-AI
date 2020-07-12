@@ -99,8 +99,17 @@ class CrosswordCreator():
         (Remove any values that are inconsistent with a variable's unary
          constraints; in this case, the length of the word.)
         """
-        raise NotImplementedError
 
+        # print(self.domains)
+
+        for var in self.crossword.variables: # For each VAR
+            for val in self.domains[var].copy(): # For each value in VAR's domain
+                # Check consistency with VAR's unary constraints
+                if (len(val) != var.length):
+                    self.domains[var].remove(val) # Remove if inconsistent
+        
+
+    # CHECK !!!!!!!!!!!!!!!!!
     def revise(self, x, y):
         """
         Make variable `x` arc consistent with variable `y`.
@@ -110,7 +119,29 @@ class CrosswordCreator():
         Return True if a revision was made to the domain of `x`; return
         False if no revision was made.
         """
-        raise NotImplementedError
+
+        # Leave y dom unchanged
+
+        revised = False
+        for x_val in self.domains[x].copy():
+            # Check all possible values in y's dom to see if ANY overlap with curr x_val in x's dom
+            # If at the end, no y_val in y's dom overlaps with x's x_val, then delete x's x_val.
+                
+            # Vals in y's dom that satisfy the binary constraint for the current x val
+            # If this set is empty, then we don't satisfy x val's dom.
+            valid_y_vals = set(
+                y_val for y_val in self.domains[y]
+                if self.crossword.overlaps[x_val, y_val] != None # means we satisfy bin. constr.
+            )
+
+            # If the y_val in y's dom doesn't satisfy the curr x_val 
+            # in x's dom, remove x_val
+            if valid_y_vals == None:
+                self.domains[x].remove(x_val)
+                revised = True 
+
+        return revised # Return true if revision was made to x dom; false if no rev. made
+        
 
     def ac3(self, arcs=None):
         """
@@ -121,6 +152,27 @@ class CrosswordCreator():
         Return True if arc consistency is enforced and no domains are empty;
         return False if one or more domains end up empty.
         """
+
+        # arcs = intial list of arcs to process
+        # If none, start with queue all arcrcs in list `arcs` 
+        # Each arc is tuple (x, y) of var x and diff var y
+
+        # Revise each arc in queue one at a time
+        # If make change to dom, need to add more arcs to queue to ensure other 
+        #arcs remain consistent
+
+        # Call "revise" fn
+
+        # If all rem. values removed from dom, return False (can't solve problem)
+        # Else, return True
+
+        # Ignore word "uniqueness"????
+
+
+
+
+
+
         raise NotImplementedError
 
     def assignment_complete(self, assignment):
@@ -128,6 +180,12 @@ class CrosswordCreator():
         Return True if `assignment` is complete (i.e., assigns a value to each
         crossword variable); return False otherwise.
         """
+
+        # assignment = dict
+        # values = strings of words that vars take on
+        # Check if every crossword var is assigned a value (ignoring actual val)
+
+
         raise NotImplementedError
 
     def consistent(self, assignment):
@@ -135,6 +193,12 @@ class CrosswordCreator():
         Return True if `assignment` is consistent (i.e., words fit in crossword
         puzzle without conflicting characters); return False otherwise.
         """
+
+        # If consistent: all values distinct, every value is correct length,
+        # no conflicts btwn neighbouring vars
+
+
+
         raise NotImplementedError
 
     def order_domain_values(self, var, assignment):
@@ -144,6 +208,23 @@ class CrosswordCreator():
         The first value in the list, for example, should be the one
         that rules out the fewest values among the neighbors of `var`.
         """
+
+        # First val: rules out least values in var's neighbours
+        # least-constraining values heuristic: computed as # vals ruled out for unassigned neighbor vars
+        # ex: assigning var to val results in elim. `n` poss. choices for neighbor vars,
+        # then order list in ascending order of `n`
+
+        # Any var in `assignment` already has a value - ignore when computer ruled out vals
+
+        # self.crossword.overlaps 
+
+        # implement first by ret list of vals in arb order 
+        # Once working, ensure vals in correct order
+
+        # Use "sort" to sort list by KEY
+
+
+
         raise NotImplementedError
 
     def select_unassigned_variable(self, assignment):
@@ -154,6 +235,16 @@ class CrosswordCreator():
         degree. If there is a tie, any of the tied variables are acceptable
         return values.
         """
+
+        # sort list by key
+        # If tie btwn vars, choose var with largest degree (most neighbours)
+        # If ties in both cases, choose arbitrarily among tied vars
+
+        #Implement by ret arb unassigned var. Then ensure ret var according to heurs.
+
+
+
+
         raise NotImplementedError
 
     def backtrack(self, assignment):
@@ -165,6 +256,22 @@ class CrosswordCreator():
 
         If no assignment is possible, return None.
         """
+
+        # Partial assignment: not all vars will have values
+
+        # If can generate puzzle, ret complete assignment (dict with all keys assigned a val)
+        # Else, retu None
+
+        #To make algo more efficient:
+        # Interleave search with inference 
+        # Maintain arc consistency each time new assignment made
+        # (this is why ac3 has arcs arg - in case start w diff queue of arcs)
+
+
+
+
+
+
         raise NotImplementedError
 
 
