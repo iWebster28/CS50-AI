@@ -188,7 +188,7 @@ def joint_probability(people, one_gene, two_genes, have_trait):
             # Probabilities from each parent
 
             #Note: If parents has:
-            #1 copy: 0.5 prob pass to child (not 0.5 - 0.01)
+            #1 copy: 0.5 prob pass to child (0.5 if parent has 1 gene; 0.5 - 0.01 if parent has > 1 gene.)
             #2 copies: passes 1 to child, 0.01 mutation (1 - 0.01)
             #0 copies: not passed on, 0.01 mutation (0.01)
             #Formula: abs(num_genes/2 - (PROBS["mutation"] if mom doesn't have 1 gene/dad doesn't have 1 gene))
