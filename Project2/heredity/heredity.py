@@ -147,7 +147,7 @@ def joint_probability(people, one_gene, two_genes, have_trait):
     """
     # print("joint_probability:")
     # print("people:", people)
-    # print("one_gene", one_gene) # Is this not already populated???
+    # print("one_gene", one_gene) 
     # print("two_genes", two_genes)
     # print("have_trait", have_trait)
     # print("--------------")
@@ -162,8 +162,8 @@ def joint_probability(people, one_gene, two_genes, have_trait):
     p = 1 # where p is entire joint probability
     person_genes = 0 # per person
 
-    print("---------------------")
-    print(f"people, {one_gene}, {two_genes}, {have_trait}")
+    # print("---------------------")
+    # print(f"people, {one_gene}, {two_genes}, {have_trait}")
 
     for person in people:  
         # Get num genes
@@ -188,15 +188,15 @@ def joint_probability(people, one_gene, two_genes, have_trait):
             # Probabilities from each parent
 
             #Note: If parents has:
-            #1 copy: 0.5 prob pass to child, 0.01 mutation (0.5 - 0.01 that child gets from this parent)
+            #1 copy: 0.5 prob pass to child (not 0.5 - 0.01)
             #2 copies: passes 1 to child, 0.01 mutation (1 - 0.01)
             #0 copies: not passed on, 0.01 mutation (0.01)
-            #Formula: abs(num_genes/2 - PROBS["mutation"])
+            #Formula: abs(num_genes/2 - (PROBS["mutation"] if mom doesn't have 1 gene/dad doesn't have 1 gene))
 
-            from_mom = abs(mom_genes/2 - PROBS["mutation"])
+            from_mom = abs(mom_genes/2 - (PROBS["mutation"] if mom_genes != 1 else 0))
             not_from_mom = abs(1 - from_mom)
 
-            from_dad = abs(dad_genes/2 - PROBS["mutation"])
+            from_dad = abs(dad_genes/2 - (PROBS["mutation"] if dad_genes != 1 else 0))
             not_from_dad = abs(1 - from_dad)
 
             # Did mother and/or father give genes?
@@ -216,7 +216,7 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         # Get total joint probability for this person
         new_joint_prob = gene_prob * trait_prob
 
-        print(f"{person}: new_join_prob = {new_joint_prob}")
+        # print(f"{person}: new_join_prob = {new_joint_prob}")
 
         # Multiply by existing joint probability
         p *= new_joint_prob
@@ -239,7 +239,7 @@ def update(probabilities, one_gene, two_genes, have_trait, p):
     the person is in `have_gene` and `have_trait`, respectively.
     """
 
-    print("p:", p)
+    # print("p:", p)
 
     # Each person should have their "gene" and "trait" distributions updated.
     for person in probabilities:
@@ -265,14 +265,11 @@ def normalize(probabilities):
 
 def normalize_helper(probabilities, person, field):
     """
-    Where field is the field get probabilities from, gene or trait
+    Where field is the field to get probabilities from, gene or trait
     """
-    sum_prob = 0
 
     # Sum all values to get denominator for normalizing later.
-    for value in probabilities[person][field]:
-        # print("value:", probabilities[person][field][value])
-        sum_prob += probabilities[person][field][value]
+    sum_prob = sum(probabilities[person][field].values())
 
     for value in probabilities[person][field]: #Normalize
         if (sum_prob != 0): #Check for division by 0
