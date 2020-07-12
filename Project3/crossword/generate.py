@@ -92,6 +92,8 @@ class CrosswordCreator():
         """
         self.enforce_node_consistency()
         self.ac3()
+        # self.print(self.crossword.variables)
+        # print('hi')
         return self.backtrack(dict())
 
     def enforce_node_consistency(self):
@@ -110,7 +112,6 @@ class CrosswordCreator():
                     self.domains[var].remove(val) # Remove if inconsistent
         
 
-    # CHECK !!!!!!!!!!!!!!!!!
     def revise(self, x, y):
         """
         Make variable `x` arc consistent with variable `y`.
@@ -200,22 +201,46 @@ class CrosswordCreator():
         # assignment = dict
         # values = strings of words that vars take on
         # Check if every crossword var is assigned a value (ignoring actual val)
+        for val in assignment.values():
+            if val == None:
+                return False
+        return True
 
-
-        raise NotImplementedError
-
+        
     def consistent(self, assignment):
         """
         Return True if `assignment` is consistent (i.e., words fit in crossword
         puzzle without conflicting characters); return False otherwise.
         """
 
-        # If consistent: all values distinct, every value is correct length,
-        # no conflicts btwn neighbouring vars
+        # If consistent: 
+        # 1. all values distinct, 
+        values = assignment.values()
+        if (len(set(values)) != len(values)):
+            return False
+
+        # 2. every value is correct length,
+        for var in assignment:
+            for var2 in self.crossword.variables:
+                if var == var2:
+                    if len(var) != len(var2)
+                        return False
+
+        # 3. no conflicts btwn neighbouring vars
+        for var in assignment:
+            neighbors = self.neighbors(var)
+            for neighbor in neighbors:
+                if self.crossword.overlaps[var, neighbor] == None:
+                    return ###################?????
+
+                    # ????
 
 
 
-        raise NotImplementedError
+
+
+        return consistent
+
 
     def order_domain_values(self, var, assignment):
         """
@@ -226,11 +251,13 @@ class CrosswordCreator():
         """
 
         # First val: rules out least values in var's neighbours
-        # least-constraining values heuristic: computed as # vals ruled out for unassigned neighbor vars
-        # ex: assigning var to val results in elim. `n` poss. choices for neighbor vars,
-        # then order list in ascending order of `n`
+        # least-constraining values heuristic: computed as # vals 
+        # ruled out for unassigned neighbor vars
+        # ex: assigning var to val results in elim. `n` poss. choices 
+        # for neighbor vars, then order list in ascending order of `n`
 
-        # Any var in `assignment` already has a value - ignore when computer ruled out vals
+        # Any var in `assignment` already has a value - ignore when 
+        # computing ruled out vals
 
         # self.crossword.overlaps 
 
