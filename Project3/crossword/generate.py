@@ -94,6 +94,8 @@ class CrosswordCreator():
         self.ac3()
         # self.print(self.crossword.variables)
         # print('hi')
+        # for var in self.crossword.variables:
+        #     print(var)
         return self.backtrack(dict())
 
     def enforce_node_consistency(self):
@@ -106,7 +108,7 @@ class CrosswordCreator():
         # print(self.domains)
 
         for var in self.crossword.variables: # For each VAR
-            for val in self.domains[var].copy(): # For each value in VAR's domain
+            for val in self.domains[var].copy(): # For each value (word) in VAR's domain
                 # Check consistency with VAR's unary constraints
                 if (len(val) != var.length):
                     self.domains[var].remove(val) # Remove if inconsistent
@@ -134,9 +136,11 @@ class CrosswordCreator():
             valid_y_vals = set()
 
             for y_val in self.domains[y]:
-                y_var = Variable(y.i, y.j, y.direction, len(y_val)) # Check overlaps
-                if self.crossword.overlaps[x, y_var] != None:
-                    valid_y_vals.add(y_val)
+                #y_var = Variable(y.i, y.j, y.direction, len(y_val)) # Check overlaps
+                overlaps = self.crossword.overlaps[x, y] # was y_var, but ignore bc enforce_node_consistency already ensures length, right?
+                if overlaps != None: #We have overlap
+                    if x_val[overlaps[0]] == y_val[overlaps[1]]: # i.e. no character conflict @ overlapping cell
+                        valid_y_vals.add(y_val)
 
             # If the y_val in y's dom doesn't satisfy the curr x_val 
             # in x's dom, remove x_val
@@ -162,12 +166,8 @@ class CrosswordCreator():
         # Each arc is tuple (x, y) of var x and diff var y
         queue = []
 
-        if arcs == None:
-            # Append all arcs - are these arcs generated correctly?
-            for x_var in self.crossword.variables:
-                for y_var in self.crossword.variables:
-                    if x_var != y_var:
-                        queue.append((x_var, y_var))    
+        if arcs == None: # Append all arcs - are these arcs generated correctly?
+            self.get_initial_arcs(queue)   
         else: 
             queue.extend(arcs)
 
@@ -190,6 +190,25 @@ class CrosswordCreator():
                 for z in (self.neighbors(x) - y):
                     queue.append((z, x)) # Add arcs back to queue
         return True
+
+
+    def get_initial_arcs(self, queue):
+        """
+        Get list of all initial arcs in the problem.
+        """
+
+        # Append all arcs - are these arcs generated correctly?
+        # for x_var in self.crossword.variables:
+        #     for y_var in self.crossword.variables:
+        #         if x_var != y_var:
+        #             queue.append((x_var, y_var)) 
+
+        # Or....?
+        for x_var in self.crossword.variables:
+            neighbors = self.crossword.neighbors(x_var)
+            for neighbor in neighbors:
+                queue.append((x_var, neighbor))
+        return
 
 
     def assignment_complete(self, assignment):
@@ -223,23 +242,23 @@ class CrosswordCreator():
         for var in assignment:
             for var2 in self.crossword.variables:
                 if var == var2:
-                    if len(var) != len(var2)
+                    if len(var) != len(var2):
                         return False
 
         # 3. no conflicts btwn neighbouring vars
         for var in assignment:
             neighbors = self.neighbors(var)
             for neighbor in neighbors:
-                if self.crossword.overlaps[var, neighbor] == None:
-                    return ###################?????
+                overlaps = self.crossword.overlaps[var, neighbor]
+                if overlaps != None:
+                    # Make sure chars line up
+                    if assignment[var][overlaps[0]] == neighbor[overlaps[1]]:
+                        continue
+                    else:
+                        return False # i.e. no overlap with neighbours, meaning conflict
+                    # ???? makes no sense because already checked overlaps in neighbours fn
 
-                    # ????
-
-
-
-
-
-        return consistent
+        return True
 
 
     def order_domain_values(self, var, assignment):
