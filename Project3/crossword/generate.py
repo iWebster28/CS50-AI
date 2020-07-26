@@ -90,10 +90,12 @@ class CrosswordCreator():
         """
         Enforce node and arc consistency, and then solve the CSP.
         """
+        print('Enforcing node consistency: ---------------')
         self.enforce_node_consistency()
 
         self.print_domains()
 
+        print('Calling ac3: ----------------')
         self.ac3()
         # self.print(self.crossword.variables)
         # print('hi')
@@ -103,6 +105,7 @@ class CrosswordCreator():
         # Every domain should satisfy binary constraint now:
         self.print_domains()
 
+        print('Calling backtrack: --------------')
         return self.backtrack(dict())
 
 
@@ -156,18 +159,23 @@ class CrosswordCreator():
             # Vals in y's dom that satisfy the binary constraint for the current x val
             # If this set is empty, then we don't satisfy x val's dom.
             valid_y_vals = set()
+            # print('length',len(valid_y_vals)) #ONLY EVER 0????
 
             for y_val in self.domains[y]:
                 #y_var = Variable(y.i, y.j, y.direction, len(y_val)) # Check overlaps
                 overlaps = self.crossword.overlaps[x, y] # was y_var, but ignore bc enforce_node_consistency already ensures length, right?
+                # print('o',overlaps)
                 if overlaps != None: #We have overlap
+                    # print('x:', x_val[overlaps[0]],'y:', y_val[overlaps[1]])
                     if x_val[overlaps[0]] == y_val[overlaps[1]]: # i.e. no character conflict @ overlapping cell
+                        # print('YOOOOOOOO')
                         valid_y_vals.add(y_val)
                         break # Check that this line works
 
             # If the y_val in y's dom doesn't satisfy the curr x_val 
             # in x's dom, remove x_val
             if valid_y_vals == None:
+                print('Removing:', x_val)
                 self.domains[x].remove(x_val)
                 revised = True 
 
@@ -192,7 +200,7 @@ class CrosswordCreator():
         queue = []
 
         if arcs == None: # Append all arcs - are these arcs generated correctly?
-            queue.extend(self.get_initial_arcs(queue)) 
+            queue.extend(self.get_initial_arcs()) 
         else: 
             queue.extend(arcs)
 
@@ -216,18 +224,11 @@ class CrosswordCreator():
         return True
 
 
-    def get_initial_arcs(self, queue):
+    def get_initial_arcs(self):
         """
         Get list of all initial arcs in the problem.
         """
-
-        # Append all arcs - are these arcs generated correctly?
-        # for x_var in self.crossword.variables:
-        #     for y_var in self.crossword.variables:
-        #         if x_var != y_var:
-        #             queue.append((x_var, y_var)) 
-
-        # Or....?
+        queue = []
         for x_var in self.crossword.variables:
             neighbors = self.crossword.neighbors(x_var)
             for neighbor in neighbors:
@@ -244,10 +245,28 @@ class CrosswordCreator():
         # assignment = dict
         # values = strings of words that vars take on
         # Check if every crossword var is assigned a value (ignoring actual val)
-        for val in assignment.values():
-            if val == None:
+        
+        if len(assignment) == 0:
+            return False
+        for var in self.crossword.variables: # in assignment???
+            # print('key: ', var,'val: ', assignment[var])
+
+            if var in assignment:
+                if assignment[var] == None:
+                    print('NONE: key: ', var,'val: ', assignment[var])
+                    return False
+            else:
                 return False
         return True
+
+
+
+        # if len(assignment.values()) == 0: # Corner case: empty
+        #     return False
+        # for val in assignment.values():
+        #     if val == None:
+        #         return False
+        # return True
 
         
     def consistent(self, assignment):
@@ -275,18 +294,23 @@ class CrosswordCreator():
 
         # 3. no conflicts btwn neighbouring vars
         for var in assignment:
-            neighbors = self.neighbors(var)
+            neighbors = self.crossword.neighbors(var)
             for neighbor in neighbors:
                 overlaps = self.crossword.overlaps[var, neighbor]
                 if overlaps != None:
                     # Make sure chars line up
-                    if assignment[var][overlaps[0]] == neighbors[neighbor][overlaps[1]]:
-                        continue
-                    else:
-                        print('Conflict with neighbor variable')
-                        return False # i.e. no overlap with neighbours, meaning conflict
-                    # ???? makes no sense because already checked overlaps in neighbours fn
-
+                    if neighbor in assignment.keys(): #CHECKKKKKK THISSSS LINEEEEE corner case make sure neighbor exists....
+                        # print('yoddle', assignment[var])
+                        # print('yinky', assignment[neighbor])
+                        if assignment[var][overlaps[0]] == assignment[neighbor][overlaps[1]]:
+                            x = 1
+                            # continue
+                        else:
+                            # print('Conflict with neighbor variable')
+                            return False # i.e. no overlap with neighbours, meaning conflict
+                        # ???? makes no sense because already checked overlaps in neighbours fn
+                    # else:
+                    #     return False # MAYBE??????
         return True
 
 
@@ -297,6 +321,24 @@ class CrosswordCreator():
         The first value in the list, for example, should be the one
         that rules out the fewest values among the neighbors of `var`.
         """
+
+        # for val in self.domains[var]:
+        #     # not sure where we use assignment...for neighbors?
+
+        # likely not right
+
+        # Do the following for every neighbor of var?
+        # Would you call enforce node consistency once? then after?
+        # then find the delta in len(self.domain[var])
+
+
+        # then sort a list by the smallest delta?
+
+
+
+
+
+
 
         # First val: rules out least values in var's neighbours
         #least-constraining values heuristic: computed as # vals 
@@ -315,7 +357,8 @@ class CrosswordCreator():
         # Use "sort" to sort list by KEY
 
         # Temp implementation: return all values in domain.
-        values = assignment[var]
+        #values = assignment[var]
+        values = self.domains[var]
         return values
 
 
@@ -328,16 +371,54 @@ class CrosswordCreator():
         return values.
         """
 
+        # Goal:
+        # want to get neighbors for each var in assignmnet
+        # store counts in a dictionary, 
+        #then sort lowest first by value.. why key????
+
+        # Maybe use the value of len(self.domains[var] as the index 
+        #for the list? Can you do that?
+        # then sort by key. Set value of each pair equal to var.
+
+        # ranking = dict()
+        # for var in assignment:
+        #     if assignment[var] == none: # Ensure unassigned - CHECKKKK
+        #         ranking[var] = len(self.domains[var])
+
+        # # order the dictionary by values. ascending
+        # # CODEEEE
+
+
+
+        # degrees = dict()
+        # # Check if tie - this doesn't work. can't index the dict.
+        # if len(ranking) > 1: 
+        #     if ranking[0] == ranking[1]:
+        #         # Choose var with higher degree
+        #         for var in (ranking[0], ranking[1]): #SYNTAXXXX
+        #             degrees[var] = self.crossword.neighbors(var)
+
+        #         # Sort list by values, Highest to lowest
+
+        #         # Choose first element. If tie, arb. choose 1st.
+        #         return degrees[0] # but can't index 
+
+
+
+
         # sort list by key
         # If tie btwn vars, choose var with largest degree (most neighbours)
         # If ties in both cases, choose arbitrarily among tied vars
 
         #Implement by ret arb unassigned var. Then ensure ret var according to heurs.
 
+        # Choosing a var that's not already part of assignment tho?????    
         # Temporary implementation
-        for var in assignment:
-            if assignment[var] == None:
+        for var in self.crossword.variables:
+            #if assignment[var] == None:
+            if var not in assignment:
                 # Return the first unassigned var
+                # print('var: ', var)
                 return var
 
 
@@ -362,6 +443,7 @@ class CrosswordCreator():
         # (this is why ac3 has arcs arg - in case start w diff queue of arcs)
 
         if self.assignment_complete(assignment):
+            print(f'assign complete? {assignment}')
             return assignment
 
         var = self.select_unassigned_variable(assignment)
@@ -369,7 +451,7 @@ class CrosswordCreator():
             
             # if value consistent with assignment: ????
             
-
+            assignment[var] = value #how did this fix it???
             if self.consistent(assignment):
                 assignment[var] = value
                 #inferences = inference(assignment)
@@ -380,7 +462,8 @@ class CrosswordCreator():
                 if result != None:
                     return result
 
-            del assignment[var] 
+            if var in assignment.keys(): #QUICK FIX _ IT ACTUALLY WORKS?????
+                del assignment[var] 
             #del inferences from assignment as well
 
         return None
