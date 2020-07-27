@@ -93,7 +93,7 @@ class CrosswordCreator():
         print('Enforcing node consistency: ---------------')
         self.enforce_node_consistency()
 
-        self.print_domains()
+        # self.print_domains()
 
         print('Calling ac3: ----------------')
         self.ac3()
@@ -103,7 +103,7 @@ class CrosswordCreator():
         #     print(var)
 
         # Every domain should satisfy binary constraint now:
-        self.print_domains()
+        # self.print_domains()
 
         print('Calling backtrack: --------------')
         return self.backtrack(dict())
@@ -211,10 +211,10 @@ class CrosswordCreator():
         # If all rem. values removed from dom, return False (can't solve problem)
         # Else, return True
 
-        count = 0
+        # count = 0
         while len(queue) != 0:
-            print(f'{count}------ {queue}')
-            count += 1
+            # print(f'{count}------ {queue}')
+            # count += 1
             (x, y) = queue.pop()
             if self.revise(x, y): 
                 if len(self.domains[x]) == 0:
@@ -248,25 +248,15 @@ class CrosswordCreator():
         
         if len(assignment) == 0:
             return False
-        for var in self.crossword.variables: # in assignment???
+        for var in self.crossword.variables:
             # print('key: ', var,'val: ', assignment[var])
-
             if var in assignment:
                 if assignment[var] == None:
-                    print('NONE: key: ', var,'val: ', assignment[var])
+                    # print('NONE: key: ', var,'val: ', assignment[var])
                     return False
             else:
                 return False
         return True
-
-
-
-        # if len(assignment.values()) == 0: # Corner case: empty
-        #     return False
-        # for val in assignment.values():
-        #     if val == None:
-        #         return False
-        # return True
 
         
     def consistent(self, assignment):
@@ -283,13 +273,13 @@ class CrosswordCreator():
         # 1. all values distinct, 
         values = assignment.values()
         if (len(set(values)) != len(values)):
-            print('Values not distinct')
+            # print('Values not distinct')
             return False
 
         # 2. every value is correct length,
         for var in assignment:
             if var.length != len(assignment[var]):
-                print('Incorrect length')
+                # print('Incorrect length')
                 return False
 
         # 3. no conflicts btwn neighbouring vars
@@ -299,18 +289,12 @@ class CrosswordCreator():
                 overlaps = self.crossword.overlaps[var, neighbor]
                 if overlaps != None:
                     # Make sure chars line up
-                    if neighbor in assignment.keys(): #CHECKKKKKK THISSSS LINEEEEE corner case make sure neighbor exists....
-                        # print('yoddle', assignment[var])
-                        # print('yinky', assignment[neighbor])
+                    if neighbor in assignment.keys(): 
                         if assignment[var][overlaps[0]] == assignment[neighbor][overlaps[1]]:
-                            x = 1
-                            # continue
+                            continue
                         else:
                             # print('Conflict with neighbor variable')
                             return False # i.e. no overlap with neighbours, meaning conflict
-                        # ???? makes no sense because already checked overlaps in neighbours fn
-                    # else:
-                    #     return False # MAYBE??????
         return True
 
 
@@ -322,8 +306,49 @@ class CrosswordCreator():
         that rules out the fewest values among the neighbors of `var`.
         """
 
-        # for val in self.domains[var]:
-        #     # not sure where we use assignment...for neighbors?
+        # THIS WORKS, but is SLOWER than just returning an unsorted domain. 
+        # Try to reduce order. 
+
+
+        neighbor_doms = [] # Store before and after assignment domain sizes
+        ranking = []
+        # For every word in the domain of var:
+        for val in self.domains[var]:
+            n = 0
+            # If we assign the val to the var, what happens to
+            #neighbors' domains?
+            for neighbor in self.crossword.neighbors(var):
+                if neighbor not in assignment: #ensure unassigned neighboring variables only
+                    overlaps = self.crossword.overlaps[var, neighbor]
+                           
+                    if overlaps != None: # Redundant, b/c neighbors
+                        for val2 in self.domains[neighbor]:  # get current neighboring domain
+                            # Valid word?
+                            if (val[overlaps[0]] != val2[overlaps[1]]): #NOT SURE IF USE ASSIGNMENT HERE
+                                n += 1 #where n is an eliminated choice from dom of current neighbor
+            ranking.append((val, n)) #Word and rank
+
+        ranking = sorted(ranking, key = lambda n: n[1])
+
+        ret_list = []
+        for val in ranking:
+            ret_list.append(val[0])
+
+        return ret_list
+
+
+        # #from enforce node consistency
+        # for val in self.domains[var].copy(): # For each value (word) in VAR's domain
+        #     # Check consistency with VAR's unary constraints
+        #     if (len(val) != var.length):
+        #         self.domains[var].remove(val) # Remove if inconsistent
+            
+
+
+        # sorted lambda fn to order least to greatest 
+
+        
+
 
         # likely not right
 
@@ -333,7 +358,6 @@ class CrosswordCreator():
 
 
         # then sort a list by the smallest delta?
-
 
 
 
@@ -351,15 +375,9 @@ class CrosswordCreator():
 
         # self.crossword.overlaps 
 
-        # implement first by ret list of vals in arb order 
-        # Once working, ensure vals in correct order
-
-        # Use "sort" to sort list by KEY
-
         # Temp implementation: return all values in domain.
-        #values = assignment[var]
-        values = self.domains[var]
-        return values
+        # values = self.domains[var]
+        # return values
 
 
     def select_unassigned_variable(self, assignment):
@@ -380,30 +398,45 @@ class CrosswordCreator():
         #for the list? Can you do that?
         # then sort by key. Set value of each pair equal to var.
 
-        # ranking = dict()
-        # for var in assignment:
-        #     if assignment[var] == none: # Ensure unassigned - CHECKKKK
-        #         ranking[var] = len(self.domains[var])
+        ranking = []
+        for var in self.crossword.variables:
+            if var not in assignment: # Ensure unassigned
+                dom_size = len(self.domains[var])
+                ranking.append((var, dom_size))
 
-        # # order the dictionary by values. ascending
-        # # CODEEEE
+        # print('ranking before:', ranking) 
+        if len(ranking) > 0:
+            # order the list by num of neighbours. ascending
+            ranking = sorted(ranking, key = lambda dom_size: dom_size[1])
+            # print(f'ranking after: {ranking}')
+        else:
+            raise Error('No unique variables to add to assignment, or no variables in crossword.')
 
+        degrees = []
 
+        # Check for tie for ranking:
+        if len(ranking) > 1: 
+            if ranking[0][1] == ranking[1][1]:
+                # Choose var with higher degree
+                for var in [ranking[0][0], ranking[1][0]]:
+                    neighbor_count = len(self.crossword.neighbors(var))
+                    degrees.append((var, neighbor_count))
 
-        # degrees = dict()
-        # # Check if tie - this doesn't work. can't index the dict.
-        # if len(ranking) > 1: 
-        #     if ranking[0] == ranking[1]:
-        #         # Choose var with higher degree
-        #         for var in (ranking[0], ranking[1]): #SYNTAXXXX
-        #             degrees[var] = self.crossword.neighbors(var)
+                # Sort list by degree magnitude, highest to lowest
+                degrees = sorted(degrees, key = lambda neighbor_count: neighbor_count[1], reverse = True)
+                # print('Tie, so taking degrees[0][0]:', degrees[0][0])
+                # Choose first element. If tie, arb. choose 1st.
+                return degrees[0][0] 
+            else:
+                # No tie:
+                # print('No tie, taking first value of ranking: ', ranking[0][0]) #check logiccccc
+                return ranking[0][0]
 
-        #         # Sort list by values, Highest to lowest
-
-        #         # Choose first element. If tie, arb. choose 1st.
-        #         return degrees[0] # but can't index 
-
-
+        elif len(ranking) == 1:
+            # print('Only 1 ranking: ranking[0][0]:', ranking[0][0])
+            return ranking[0][0]
+        else:
+            raise Error('Sorted len(ranking) <= 0: This shouldn\'t have happened.')
 
 
         # sort list by key
@@ -414,12 +447,11 @@ class CrosswordCreator():
 
         # Choosing a var that's not already part of assignment tho?????    
         # Temporary implementation
-        for var in self.crossword.variables:
-            #if assignment[var] == None:
-            if var not in assignment:
-                # Return the first unassigned var
-                # print('var: ', var)
-                return var
+        # for var in self.crossword.variables:
+        #     if var not in assignment:
+        #         # Return the first unassigned var
+        #         # print('var: ', var)
+        #         return var
 
 
     def backtrack(self, assignment):
@@ -443,7 +475,7 @@ class CrosswordCreator():
         # (this is why ac3 has arcs arg - in case start w diff queue of arcs)
 
         if self.assignment_complete(assignment):
-            print(f'assign complete? {assignment}')
+            print(f'Assignment complete: {assignment}')
             return assignment
 
         var = self.select_unassigned_variable(assignment)
