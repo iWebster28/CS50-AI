@@ -90,22 +90,14 @@ class CrosswordCreator():
         """
         Enforce node and arc consistency, and then solve the CSP.
         """
-        print('Enforcing node consistency: ---------------')
+        # print('Enforcing node consistency: ---------------')
         self.enforce_node_consistency()
-
         # self.print_domains()
-
-        print('Calling ac3: ----------------')
+        # print('Calling ac3: ----------------')
         self.ac3()
-        # self.print(self.crossword.variables)
-        # print('hi')
-        # for var in self.crossword.variables:
-        #     print(var)
-
         # Every domain should satisfy binary constraint now:
         # self.print_domains()
-
-        print('Calling backtrack: --------------')
+        # print('Calling backtrack: --------------')
         return self.backtrack(dict())
 
 
@@ -159,7 +151,7 @@ class CrosswordCreator():
             # Vals in y's dom that satisfy the binary constraint for the current x val
             # If this set is empty, then we don't satisfy x val's dom.
             valid_y_vals = set()
-            # print('length',len(valid_y_vals)) #ONLY EVER 0????
+            # print('length',len(valid_y_vals))
 
             for y_val in self.domains[y]:
                 #y_var = Variable(y.i, y.j, y.direction, len(y_val)) # Check overlaps
@@ -336,45 +328,6 @@ class CrosswordCreator():
 
         return ret_list
 
-
-        # #from enforce node consistency
-        # for val in self.domains[var].copy(): # For each value (word) in VAR's domain
-        #     # Check consistency with VAR's unary constraints
-        #     if (len(val) != var.length):
-        #         self.domains[var].remove(val) # Remove if inconsistent
-            
-
-
-        # sorted lambda fn to order least to greatest 
-
-        
-
-
-        # likely not right
-
-        # Do the following for every neighbor of var?
-        # Would you call enforce node consistency once? then after?
-        # then find the delta in len(self.domain[var])
-
-
-        # then sort a list by the smallest delta?
-
-
-
-
-
-
-        # First val: rules out least values in var's neighbours
-        #least-constraining values heuristic: computed as # vals 
-        #ruled out for unassigned neighbor vars
-        # ex: assigning var to val results in elim. `n` poss. choices 
-        #for neighbor vars, then order list in ascending order of `n`
-
-        # Any var in `assignment` already has a value - ignore when 
-        #computing ruled out vals
-
-        # self.crossword.overlaps 
-
         # Temp implementation: return all values in domain.
         # values = self.domains[var]
         # return values
@@ -392,7 +345,7 @@ class CrosswordCreator():
         # Goal:
         # want to get neighbors for each var in assignmnet
         # store counts in a dictionary, 
-        #then sort lowest first by value.. why key????
+        #then sort lowest first by value
 
         # Maybe use the value of len(self.domains[var] as the index 
         #for the list? Can you do that?
@@ -443,9 +396,6 @@ class CrosswordCreator():
         # If tie btwn vars, choose var with largest degree (most neighbours)
         # If ties in both cases, choose arbitrarily among tied vars
 
-        #Implement by ret arb unassigned var. Then ensure ret var according to heurs.
-
-        # Choosing a var that's not already part of assignment tho?????    
         # Temporary implementation
         # for var in self.crossword.variables:
         #     if var not in assignment:
@@ -475,7 +425,7 @@ class CrosswordCreator():
         # (this is why ac3 has arcs arg - in case start w diff queue of arcs)
 
         if self.assignment_complete(assignment):
-            print(f'Assignment complete: {assignment}')
+            # print(f'Assignment complete: {assignment}')
             return assignment
 
         var = self.select_unassigned_variable(assignment)
