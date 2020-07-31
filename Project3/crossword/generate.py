@@ -153,6 +153,8 @@ class CrosswordCreator():
             valid_y_vals = set()
             # print('length',len(valid_y_vals))
 
+
+            # This could be replaced by code in consistency (3.)
             for y_val in self.domains[y]:
                 #y_var = Variable(y.i, y.j, y.direction, len(y_val)) # Check overlaps
                 overlaps = self.crossword.overlaps[x, y] # was y_var, but ignore bc enforce_node_consistency already ensures length, right?
@@ -167,7 +169,7 @@ class CrosswordCreator():
             # If the y_val in y's dom doesn't satisfy the curr x_val 
             # in x's dom, remove x_val
             if valid_y_vals == None:
-                print('Removing:', x_val)
+                # print('Removing:', x_val)
                 self.domains[x].remove(x_val)
                 revised = True 
 
@@ -316,7 +318,7 @@ class CrosswordCreator():
                     if overlaps != None: # Redundant, b/c neighbors
                         for val2 in self.domains[neighbor]:  # get current neighboring domain
                             # Valid word?
-                            if (val[overlaps[0]] != val2[overlaps[1]]): #NOT SURE IF USE ASSIGNMENT HERE
+                            if (val[overlaps[0]] != val2[overlaps[1]]): 
                                 n += 1 #where n is an eliminated choice from dom of current neighbor
             ranking.append((val, n)) #Word and rank
 
@@ -429,11 +431,8 @@ class CrosswordCreator():
             return assignment
 
         var = self.select_unassigned_variable(assignment)
-        for value in self.order_domain_values(var, assignment):
-            
-            # if value consistent with assignment: ????
-            
-            assignment[var] = value #how did this fix it???
+        for value in self.order_domain_values(var, assignment):         
+            assignment[var] = value 
             if self.consistent(assignment):
                 assignment[var] = value
                 #inferences = inference(assignment)
