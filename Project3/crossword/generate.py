@@ -444,7 +444,7 @@ class CrosswordCreator():
                 if result != None:
                     return result
 
-            if var in assignment.keys(): #QUICK FIX _ IT ACTUALLY WORKS?????
+            if var in assignment.keys(): 
                 del assignment[var] 
             #del inferences from assignment as well
 
