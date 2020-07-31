@@ -22,4 +22,6 @@ Uses unconditional probabilities of passing a trait from parent to child to gues
 
 ## Week3/Project3 - Optimization
 ### [Crossword](./Project3/crossword)
-Uses the AC-3 arc consistency algorithm.
+A crossword puzzle generator, taking as input a puzzle template and word list, then outputting a finished puzzle.
+This is a constraint satisfaction problem that uses the AC-3 arc consistency algorithm to decide where words will go.
+(The empty word-placeholders in the puzzle templace are the **variables**, and each variable has a **domain** of words that they could be assigned. By enforcing arc consistency, domains are reduced, and words are placed in the puzzle.) A **backtracking** search is used choose a word from a domain to assign to a variable. In the backtracking search, a **minimum remaining values** (MRV) heuristic is ysed to select variables with the smallest domain first. As well, a **least-constraining values heuristic** is used to prioritize variables that rule out the least options from its neighbouring domains.
