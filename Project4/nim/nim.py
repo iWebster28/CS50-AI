@@ -101,13 +101,19 @@ class NimAI():
         Return the Q-value for the state `state` and the action `action`.
         If no Q-value exists yet in `self.q`, return 0.
         """
-        raise NotImplementedError
+        q = self.q[(tuple(state), action)]
+
+        if q != None:
+            return q
+        else:
+            return 0
+
 
     def update_q_value(self, state, action, old_q, reward, future_rewards):
         """
         Update the Q-value for the state `state` and the action `action`
         given the previous Q-value `old_q`, a current reward `reward`,
-        and an estiamte of future rewards `future_rewards`.
+        and an estimate of future rewards `future_rewards`.
 
         Use the formula:
 
@@ -118,7 +124,11 @@ class NimAI():
         `alpha` is the learning rate, and `new value estimate`
         is the sum of the current reward and estimated future rewards.
         """
-        raise NotImplementedError
+
+        new_val_est = reward + future_rewards
+        self.q[(tuple(state), action)] = old_q + self.alpha * (new_val_est - old_q)
+        return
+
 
     def best_future_reward(self, state):
         """
@@ -130,7 +140,24 @@ class NimAI():
         Q-value in `self.q`. If there are no available actions in
         `state`, return 0.
         """
-        raise NotImplementedError
+
+        q = self.get_q_value(state, action)
+
+        # How to get all poss. actions for a given state?
+        avail_actions = Nim.available_actions(state)
+
+        if avail_actions != 0:
+            # For `state` -> get all `(state, action)` pairs
+            # Return max Q val
+            max_q = 0
+            for action in avail_actions:
+                curr_q = self.q[tuple(state), action]
+                if curr_q > max_q:
+                    max_q = curr_q
+            return max_q
+        else:
+            return 0
+
 
     def choose_action(self, state, epsilon=True):
         """
@@ -147,8 +174,11 @@ class NimAI():
         If multiple actions have the same Q-value, any of those
         options is an acceptable return value.
         """
-        raise NotImplementedError
 
+        
+
+
+        
 
 def train(n):
     """
