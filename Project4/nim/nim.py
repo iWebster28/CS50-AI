@@ -101,7 +101,7 @@ class NimAI():
         Return the Q-value for the state `state` and the action `action`.
         If no Q-value exists yet in `self.q`, return 0.
         """
-        q = self.q[(tuple(state), action)]
+        q = self.q.get((tuple(state), action))
 
         if q != None:
             return q
@@ -126,7 +126,7 @@ class NimAI():
         """
 
         new_val_est = reward + future_rewards
-        self.q[(tuple(state), action)] = old_q + self.alpha * (new_val_est - old_q)
+        self.q[tuple(state), action] = old_q + self.alpha * (new_val_est - old_q)
         return
 
 
@@ -141,8 +141,6 @@ class NimAI():
         `state`, return 0.
         """
 
-        q = self.get_q_value(state, action)
-
         # How to get all poss. actions for a given state?
         avail_actions = Nim.available_actions(state)
 
@@ -151,7 +149,7 @@ class NimAI():
             # Return max Q val
             max_q = 0
             for action in avail_actions:
-                curr_q = self.q[tuple(state), action]
+                curr_q = self.get_q_value(state, action)
                 if curr_q > max_q:
                     max_q = curr_q
             return max_q
@@ -175,10 +173,39 @@ class NimAI():
         options is an acceptable return value.
         """
 
-        
+        avail_actions = Nim.available_actions(state)
+
+        if epsilon == False:
+            ret_act = self.get_best_action(state, avail_actions)
+            
+        else:
+            # 0 means choose random; 1 is greedy
+            choice = random.choices([0, 1], weights = [self.epsilon, 1 - self.epsilon], k = 1)
+            if choice == 0:
+                ret_act = random.choice(avail_actions)
+            else:
+                ret_act = self.get_best_action(state, avail_actions) 
+        print('ret_act:', ret_act)
+        return ret_act
 
 
-        
+    def get_best_action(self, state, avail_actions):
+        """
+        Returns the best action (greedy)
+        """
+
+        ret_act = (0, 0)
+        if avail_actions != 0:
+            # For `state` -> get all `(state, action)` pairs
+            max_q = 0
+            for action in avail_actions:
+                curr_q = self.get_q_value(state, action)
+                print('curr_q:', curr_q)
+                if curr_q > max_q:
+                    max_q = curr_q
+                    ret_act = action
+        return ret_act
+
 
 def train(n):
     """
