@@ -174,18 +174,20 @@ class NimAI():
         """
 
         avail_actions = Nim.available_actions(state)
+        # print('avail actions:', avail_actions)
 
         if epsilon == False:
             ret_act = self.get_best_action(state, avail_actions)
             
         else:
             # 0 means choose random; 1 is greedy
-            choice = random.choices([0, 1], weights = [self.epsilon, 1 - self.epsilon], k = 1)
+            choice = random.choices([0, 1], weights = [self.epsilon, 1 - self.epsilon])[0]
+            # print('choice:', choice)
             if choice == 0:
-                ret_act = random.choice(avail_actions)
+                ret_act = random.choice(tuple(avail_actions))
             else:
                 ret_act = self.get_best_action(state, avail_actions) 
-        print('ret_act:', ret_act)
+        # print('ret_act:', ret_act)
         return ret_act
 
 
@@ -194,16 +196,18 @@ class NimAI():
         Returns the best action (greedy)
         """
 
-        ret_act = (0, 0)
         if avail_actions != 0:
             # For `state` -> get all `(state, action)` pairs
             max_q = 0
             for action in avail_actions:
                 curr_q = self.get_q_value(state, action)
-                print('curr_q:', curr_q)
+                # print('curr_q:', curr_q)
                 if curr_q > max_q:
                     max_q = curr_q
                     ret_act = action
+                elif max_q == 0:
+                    ret_act = action
+        # print(ret_act)
         return ret_act
 
 
