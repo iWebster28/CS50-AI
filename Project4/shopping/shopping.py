@@ -1,5 +1,6 @@
 import csv
 import sys
+import numpy as np
 
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -38,28 +39,89 @@ def load_data(filename):
 
     evidence should be a list of lists, where each list contains the
     following values, in order:
-        - Administrative, an integer
-        - Administrative_Duration, a floating point number
-        - Informational, an integer
-        - Informational_Duration, a floating point number
-        - ProductRelated, an integer
-        - ProductRelated_Duration, a floating point number
-        - BounceRates, a floating point number
-        - ExitRates, a floating point number
-        - PageValues, a floating point number
-        - SpecialDay, a floating point number
-        - Month, an index from 0 (January) to 11 (December)
-        - OperatingSystems, an integer
-        - Browser, an integer
-        - Region, an integer
-        - TrafficType, an integer
-        - VisitorType, an integer 0 (not returning) or 1 (returning)
-        - Weekend, an integer 0 (if false) or 1 (if true)
+        - 0. Administrative, an integer
+        - 1. Administrative_Duration, a floating point number
+        - 2. Informational, an integer
+        - 3. Informational_Duration, a floating point number
+        - 4. ProductRelated, an integer
+        - 5. ProductRelated_Duration, a floating point number
+        - 6. BounceRates, a floating point number
+        - 7. ExitRates, a floating point number
+        - 8. PageValues, a floating point number
+        - 9. SpecialDay, a floating point number
+        - 10. Month, an index from 0 (January) to 11 (December)
+        - 11. OperatingSystems, an integer
+        - 12. Browser, an integer
+        - 13. Region, an integer
+        - 14. TrafficType, an integer
+        - 15. VisitorType, an integer 0 (not returning) or 1 (returning)
+        - 16. Weekend, an integer 0 (if false) or 1 (if true)
 
     labels should be the corresponding list of labels, where each label
     is 1 if Revenue is true, and 0 otherwise.
     """
-    raise NotImplementedError
+    
+    data = []
+    evidence = []
+    labels = []
+    fields = {}
+
+    # Read all rows of csv into data list
+    with open(filename, 'r') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            data.append(row) 
+
+    data_np = np.array(data)
+    evidence = data_np[1:, 0:16] #"1" to omit row headers
+    labels = data_np[1:, 17] # last col is labels
+
+    # Dictionary for accessing fields mor easily
+    for i in range(len(data_np[0, :])):
+        fields[data_np[0, i]] = i # Enable dictionary behaviour with np array
+
+    # print(fields)
+    # print(labels)
+    # print(evidence)
+
+    # Ensure correct types
+
+    # Enumerate months from 0-11 (Jan-Dec)
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    for row in range(1, len(data_np[:, fields["Month"]])):
+        # print(data_np[row, fields["Month"]])
+        data_np[row, fields["Month"]] = months.index(data_np[row, fields["Month"]])
+
+    # Set visitor types to 0 (false) or 1 (true)
+    data_np[data_np == "Returning_Visitor"] = 1
+    data_np[data_np == "New_Visitor"] = 0
+    data_np[data_np == "Other"] = 0
+
+    # print('VisitorType', data_np[1:, fields["VisitorType"]])
+
+    # Set TRUE/FALSE to 0/1
+    data_np[data_np == "TRUE"] = 1
+    data_np[data_np == "FALSE"] = 0
+
+    # Assert VisitorType, Weekend and Revenue are all ints (should be 0/1)
+    other_cols = ["VisitorType", "Weekend", "Revenue"]
+    for col in other_cols:
+        # print(col, data_np[1:, fields[col]])
+        data_np[1:, fields[col]] = data_np[1:, fields[col]].astype(int, copy = False)
+
+    # Assert ints
+    int_cols = ["Administrative", "Informational", "ProductRelated", "Month", "OperatingSystems", "Browser", "Region", "TrafficType", "VisitorType", "Weekend"]
+    for col in int_cols:
+        # print(col, data_np[1:, fields[col]])
+        data_np[1:, fields[col]] = data_np[1:, fields[col]].astype(int, copy = False)
+
+    # Assert floats
+    float_cols = ["Administrative_Duration", "Informational_Duration", "ProductRelated_Duration", "BounceRates", "ExitRates", "PageValues", "SpecialDay"]
+    for col in float_cols:
+        # print(data_np[1:, fields[col]])
+        data_np[1:, fields[col]] = data_np[1:, fields[col]].astype(float, copy = False)    
+
+    return (evidence, labels)
 
 
 def train_model(evidence, labels):
@@ -67,7 +129,9 @@ def train_model(evidence, labels):
     Given a list of evidence lists and a list of labels, return a
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
-    raise NotImplementedError
+    
+
+
 
 
 def evaluate(labels, predictions):
@@ -85,7 +149,9 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+    
+
+
 
 
 if __name__ == "__main__":

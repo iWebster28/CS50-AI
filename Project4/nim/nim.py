@@ -143,7 +143,7 @@ class NimAI():
 
         # How to get all poss. actions for a given state?
         avail_actions = Nim.available_actions(state)
-
+        
         if avail_actions != 0:
             # For `state` -> get all `(state, action)` pairs
             # Return max Q val
