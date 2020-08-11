@@ -73,8 +73,6 @@ def load_data(filename):
             data.append(row) 
 
     data_np = np.array(data)
-    evidence = data_np[1:, 0:16] #"1" to omit row headers
-    labels = data_np[1:, 17] # last col is labels
 
     # Dictionary for accessing fields mor easily
     for i in range(len(data_np[0, :])):
@@ -120,6 +118,12 @@ def load_data(filename):
     for col in float_cols:
         # print(data_np[1:, fields[col]])
         data_np[1:, fields[col]] = data_np[1:, fields[col]].astype(float, copy = False)    
+
+    evidence = data_np[1:, 0:17] #"1" to omit row headers
+    labels = data_np[1:, 17] # last col is labels
+
+    # print(evidence[0])
+    # print(labels[0])
 
     return (evidence, labels)
 
