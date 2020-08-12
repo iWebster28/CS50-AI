@@ -185,7 +185,6 @@ def evaluate(labels, predictions):
             
         elif actual == predicted == float(0):
             specificity += 1
-            spec_tot += 1
         # else:
         #     print(f'No match: {actual}, {predicted}')
 
