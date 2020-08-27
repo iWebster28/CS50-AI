@@ -59,7 +59,12 @@ def load_data(data_dir):
     corresponding `images`.
     """
     
+    # Get folders (labels?)
 
+
+    # Get images for each folder/label
+
+    # Return list
 
 
 
