@@ -106,8 +106,8 @@ def get_model():
     model.add(tf.keras.layers.Flatten())
 
     # Hidden layer and Dropout
-    # tf.keras.layers.Dense(128, activation='relu')
-    # tf.keras.layers.Dropout(0.5)
+    tf.keras.layers.Dense(128, activation='relu')
+    tf.keras.layers.Dropout(0.5)
 
     # Output layer
     # NUM_CATEGORIES outputs (43)
