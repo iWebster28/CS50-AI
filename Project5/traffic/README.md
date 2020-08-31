@@ -10,10 +10,16 @@ Identical to above, but with 128-unit Dense layer and Dropout with rate of 0.5
 **Test 3**
 Try Test 1 again, but realized should be using categorical_crossentropy on compile; not binary_crossentropy.
 
+**Test 4**
+Try Test 2 again, but realized should be using categorical_crossentropy on compile; not binary_crossentropy.
+
+
+
 ## Test Results
 **Test 1:** 10656/10656 - 1s - loss: 0.0220 - acc: 0.9961
 **Test 2:** 10656/10656 - 1s - loss: 0.6886 - acc: 0.9552
 **Test 3:** 10656/10656 - 1s - loss: 1.0814 - acc: 0.9060
+**Test 4:** 10656/10656 - 1s - loss: 0.7551 - acc: 0.9188
 
 
 ## What worked well? 
