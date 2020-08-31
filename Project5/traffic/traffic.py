@@ -97,16 +97,21 @@ def get_model():
     # 32 filters
     # 3x3 kernel size
     model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu'))
-    # model.add(tf.keras.layers.Conv2D(32, 3, activation='relu'))
-
     # Max Pooling 
-    model.add(tf.keras.layers.MaxPooling2D(pool_size = (4, 4))) 
+    # model.add(tf.keras.layers.MaxPooling2D(pool_size = (4, 4))) 
+
+    #Convolve 2nd Time
+    model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu'))
+    # Max Pooling 2nd Time
+    model.add(tf.keras.layers.MaxPooling2D(pool_size = (2, 2))) 
 
     # Flatten
     model.add(tf.keras.layers.Flatten())
 
-    # Hidden layer and Dropout
+    # Hidden layer
     tf.keras.layers.Dense(128, activation='relu')
+
+    # Dropout
     tf.keras.layers.Dropout(0.50)
 
     # Output layer

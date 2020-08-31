@@ -30,6 +30,10 @@ Bringing dropout back to 0.5 - realize that high dropout may be ineffective. htt
 I noticed that although the accuracy improved, the loss was still significant. Now trying (4,4) pool size in first 2DConv layer - seeing reduced loss compared to test 6-8.
 
 **Test 10:**
+Testing a second convolutional layer and 2x2 max pooling. Gives less loss
+
+**Test 11:**
+Keep 2nd convolutional layer and its 2x2 max pooling, but remove the 1st 2x2 max pooling. Way better accuracy and minimal loss!!
 
 
 ## Test Results
@@ -42,7 +46,8 @@ I noticed that although the accuracy improved, the loss was still significant. N
 **Test 7:** 10656/10656 - 1s - loss: 0.5524 - acc: 0.9455
 **Test 8:** 10656/10656 - 1s - loss: 0.7447 - acc: 0.9162
 **Test 9:** 10656/10656 - 1s - loss: 0.5047 - acc: 0.9240
-
+**Test 10:** 10656/10656 - 1s - loss: 0.4789 - acc: 0.8725
+**Test 11:** 10656/10656 - 1s - loss: 0.1993 - acc: 0.9702
 
 
 ## What worked well? 
