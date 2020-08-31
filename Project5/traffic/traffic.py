@@ -73,7 +73,7 @@ def load_data(data_dir):
             sub_dir = base_dir + os.path.join(os.sep, folder)
             for image in os.listdir(sub_dir):
                 path = os.path.join(sub_dir, image)
-                img = cv2.imread(path)
+                img = cv2.imread(path) # , mode = 'RGB'
                 resize = cv2.resize(img, (IMG_WIDTH, IMG_HEIGHT), interpolation = cv2.INTER_LINEAR)
                 images.append(resize) # Store image
                 labels.append(folder) # Store label
@@ -88,7 +88,43 @@ def get_model():
     `input_shape` of the first layer is `(IMG_WIDTH, IMG_HEIGHT, 3)`.
     The output layer should have `NUM_CATEGORIES` units, one for each category.
     """
-    raise NotImplementedError
+    model = tf.keras.models.Sequential(name='Traffic Sign Identification')
+
+    # Specify input shape
+    model.add(tf.keras.layers.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))) # RGB depth => 3
+
+    # 2D Convolutional Layer
+    # 32 filters
+    # 3x3 kernel size
+    model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu'))
+    # model.add(tf.keras.layers.Conv2D(32, 3, activation='relu'))
+
+    # Max Pooling 
+    model.add(tf.keras.layers.MaxPooling2D(pool_size = (2, 2))) 
+
+    # Flatten
+    model.add(tf.keras.layers.Flatten())
+
+    # Hidden layer and Dropout
+    # tf.keras.layers.Dense(128, activation='relu')
+    # tf.keras.layers.Dropout(0.5)
+
+    # Output layer
+    # NUM_CATEGORIES outputs (43)
+    # softmax activation to give probabilities/confidence
+    model.add(tf.keras.layers.Dense(NUM_CATEGORIES, activation='softmax'))
+   
+    # Diagnostic
+    model.summary()
+
+    # Training the CNN
+    model.compile(
+        optimizer="adam",
+        loss="binary_crossentropy",
+        metrics=["accuracy"]
+    )
+
+    return model 
 
 
 if __name__ == "__main__":
