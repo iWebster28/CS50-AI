@@ -58,15 +58,28 @@ def load_data(data_dir):
     be a list of integer labels, representing the categories for each of the
     corresponding `images`.
     """
-    
-    # Get folders (labels?)
 
+    images = [] # numpy.ndarrays
+    labels = [] # integers (category #)
 
+    # Get folders (labels)
     # Get images for each folder/label
 
+    base_dir = os.curdir + os.path.join(os.sep, data_dir)
+
+    for folder in os.listdir(base_dir):
+        if (int(folder) < NUM_CATEGORIES): # Assert valid folder
+            # For each image in a subdirectory: 
+            sub_dir = base_dir + os.path.join(os.sep, folder)
+            for image in os.listdir(sub_dir):
+                path = os.path.join(sub_dir, image)
+                img = cv2.imread(path)
+                resize = cv2.resize(img, (IMG_WIDTH, IMG_HEIGHT), interpolation = cv2.INTER_LINEAR)
+                images.append(resize) # Store image
+                labels.append(folder) # Store label
+
     # Return list
-
-
+    return (images, labels)
 
 
 def get_model():
