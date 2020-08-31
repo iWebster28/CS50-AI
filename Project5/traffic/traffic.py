@@ -100,18 +100,18 @@ def get_model():
     # model.add(tf.keras.layers.Conv2D(32, 3, activation='relu'))
 
     # Max Pooling 
-    model.add(tf.keras.layers.MaxPooling2D(pool_size = (2, 2))) 
+    model.add(tf.keras.layers.MaxPooling2D(pool_size = (4, 4))) 
 
     # Flatten
     model.add(tf.keras.layers.Flatten())
 
     # Hidden layer and Dropout
     tf.keras.layers.Dense(128, activation='relu')
-    tf.keras.layers.Dropout(0.5)
+    tf.keras.layers.Dropout(0.50)
 
     # Output layer
     # NUM_CATEGORIES outputs (43)
-    # softmax activation to give probabilities/confidence
+    # softmax activation to give probabilities/confidence in results - ideal version of sigmoid function for multi-classification
     model.add(tf.keras.layers.Dense(NUM_CATEGORIES, activation='softmax'))
    
     # Diagnostic
