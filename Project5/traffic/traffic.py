@@ -93,26 +93,46 @@ def get_model():
     # Specify input shape
     model.add(tf.keras.layers.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))) # RGB depth => 3
 
-    # 2D Convolutional Layer
+    # 1st 2D Convolutional Layer
     # 32 filters
     # 3x3 kernel size
     model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu'))
-    # Max Pooling 
-    # model.add(tf.keras.layers.MaxPooling2D(pool_size = (4, 4))) 
-
     #Convolve 2nd Time
     model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu'))
-    # Max Pooling 2nd Time
+    # Max Pooling
     model.add(tf.keras.layers.MaxPooling2D(pool_size = (2, 2))) 
+    # Batch Normalization - keeps the mean activation ~0, and the standard deviation for the activation ~1
+    model.add(tf.keras.layers.BatchNormalization())
 
-    # Flatten
-    model.add(tf.keras.layers.Flatten())
+    # 3rd & 4th Convolution
+    model.add(tf.keras.layers.Conv2D(32, (2, 2), activation='relu'))
+    model.add(tf.keras.layers.Conv2D(32, (2, 2), activation='relu'))
+    # Max Pooling
+    model.add(tf.keras.layers.MaxPooling2D(pool_size = (2, 2)))
+    # Batch Normalization
+    model.add(tf.keras.layers.BatchNormalization())
+
+    # 5th & 6th Convolution
+    model.add(tf.keras.layers.Conv2D(32, (2, 2), activation='relu'))
+    model.add(tf.keras.layers.Conv2D(32, (2, 2), activation='relu'))
+    # Max Pooling
+    model.add(tf.keras.layers.MaxPooling2D(pool_size = (2, 2)))
+    # Batch Normalization
+    model.add(tf.keras.layers.BatchNormalization())
+
+    # # Flatten
+    # model.add(tf.keras.layers.Flatten())
 
     # Hidden layer
     tf.keras.layers.Dense(128, activation='relu')
 
     # Dropout
     tf.keras.layers.Dropout(0.50)
+
+    model.summary()
+
+    # Apply Global Max Pooling
+    model.add(tf.keras.layers.GlobalMaxPooling2D()) 
 
     # Output layer
     # NUM_CATEGORIES outputs (43)
