@@ -78,7 +78,7 @@ Test 15 gave the most consistent results. Relu activation on 4 x (2D Convolution
 **Test 15 - Run 2:** 10656/10656 - 2s - loss: 0.1187 - acc: 0.9670  
 **Test 15 - Run 3:** 10656/10656 - 2s - loss: 0.0358 - acc: 0.9922  
 **Test 15  - Run 4:** 10656/10656 - 2s - loss: 0.0543 - acc: 0.9878  
-**Test 15 - Run 5:** 10656/10656 - 2s - loss: 0.0782 - acc: 0.9799
+**Test 15 - Run 5:** 10656/10656 - 2s - loss: 0.0782 - acc: 0.9799  
 **Test 15 Avg:** loss: 0.0674 - acc: 0.98308 **BEST**  
 **Test 16:** 10656/10656 - 2s - loss: 0.0718 - acc: 0.9790  
 **Test 17 - Run 1:** 10656/10656 - 2s - loss: 0.0648 - acc: 0.9806  
