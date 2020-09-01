@@ -48,7 +48,7 @@ Added a 4th convolutional layer. Improvement!
 Added Batch Normalization after each
 
 **Test 16:**
-Added 5th convolution layers. 
+Added 5th convolutional layer. 
 
 **Test 17:**
 6th layer. Using global max pooling with no flattening now.
@@ -58,8 +58,8 @@ Try flattening instead of global max pooling. Less performance.
 Test 17 is the best!
 
 ## Test Results
-**Test 1 (Irrelevant):** 10656/10656 - 1s - loss: 0.0220 - acc: 0.9961
-**Test 2 (Irrelevant):** 10656/10656 - 1s - loss: 0.6886 - acc: 0.9552
+**Test 1 (Irrelevant):** 10656/10656 - 1s - loss: 0.0220 - acc: 0.9961  
+**Test 2 (Irrelevant):** 10656/10656 - 1s - loss: 0.6886 - acc: 0.9552  
 **Test 3:** 10656/10656 - 1s - loss: 1.0814 - acc: 0.9060  
 **Test 4:** 10656/10656 - 1s - loss: 0.7551 - acc: 0.9188  
 **Test 5:** 10656/10656 - 1s - loss: 7.5569 - acc: 0.0059 **woah!**  
