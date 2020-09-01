@@ -79,14 +79,14 @@ Test 15 gave the most consistent results. Relu activation on 4 x (2D Convolution
 **Test 15 - Run 3:** 10656/10656 - 2s - loss: 0.0358 - acc: 0.9922  
 **Test 15  - Run 4:** 10656/10656 - 2s - loss: 0.0543 - acc: 0.9878  
 **Test 15 - Run 5:** 10656/10656 - 2s - loss: 0.0782 - acc: 0.9799
-** Test 15 Avg:** loss: 0.0674 - acc: 0.98308 **BEST**
+**Test 15 Avg:** loss: 0.0674 - acc: 0.98308 **BEST**  
 **Test 16:** 10656/10656 - 2s - loss: 0.0718 - acc: 0.9790  
 **Test 17 - Run 1:** 10656/10656 - 2s - loss: 0.0648 - acc: 0.9806  
 **Test 17 - Run 2:** 10656/10656 - 2s - loss: 0.0553 - acc: 0.9844    
 **Test 17 - Run 3:** 10656/10656 - 2s - loss: 0.0610 - acc: 0.9819  
-**Test 17 - Run 4:** 10656/10656 - 2s - loss: 0.1466 - acc: 0.9593
-**Test 17 - Run 5:** 10656/10656 - 2s - loss: 0.0624 - acc: 0.9825
-** Test 17 Avg:** loss: 0.07802 - acc: 0.97774
+**Test 17 - Run 4:** 10656/10656 - 2s - loss: 0.1466 - acc: 0.9593  
+**Test 17 - Run 5:** 10656/10656 - 2s - loss: 0.0624 - acc: 0.9825  
+**Test 17 Avg:** loss: 0.07802 - acc: 0.97774  
 **Test 18:** 10656/10656 - 2s - loss: 0.0821 - acc: 0.9753  
 
 ## What worked well? 
