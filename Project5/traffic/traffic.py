@@ -68,7 +68,7 @@ def load_data(data_dir):
     base_dir = os.curdir + os.path.join(os.sep, data_dir)
 
     for folder in os.listdir(base_dir):
-        if (int(folder) < NUM_CATEGORIES): # Assert valid folder
+        if (folder != '.DS_Store' and int(folder) < NUM_CATEGORIES): # Assert valid folder
             # For each image in a subdirectory: 
             sub_dir = base_dir + os.path.join(os.sep, folder)
             for image in os.listdir(sub_dir):
@@ -88,15 +88,15 @@ def get_model():
     `input_shape` of the first layer is `(IMG_WIDTH, IMG_HEIGHT, 3)`.
     The output layer should have `NUM_CATEGORIES` units, one for each category.
     """
-    model = tf.keras.models.Sequential(name='Traffic Sign Identification')
+    model = tf.keras.models.Sequential() #name='Traffic Sign Identification')
 
     # Specify input shape
-    model.add(tf.keras.layers.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))) # RGB depth => 3
+    # model.add(tf.keras.layers.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))) # RGB depth => 3
 
     # 1st 2D Convolutional Layer
     # 32 filters
     # 3x3 kernel size
-    model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu'))
+    model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)))
     #Convolve 2nd Time
     model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu'))
     # Max Pooling
