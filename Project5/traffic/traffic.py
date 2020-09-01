@@ -112,27 +112,14 @@ def get_model():
     # Batch Normalization
     model.add(tf.keras.layers.BatchNormalization())
 
-    # 5th & 6th Convolution
-    model.add(tf.keras.layers.Conv2D(32, (2, 2), activation='relu'))
-    model.add(tf.keras.layers.Conv2D(32, (2, 2), activation='relu'))
-    # Max Pooling
-    model.add(tf.keras.layers.MaxPooling2D(pool_size = (2, 2)))
-    # Batch Normalization
-    model.add(tf.keras.layers.BatchNormalization())
-
-    # # Flatten
-    # model.add(tf.keras.layers.Flatten())
+    # Flatten
+    model.add(tf.keras.layers.Flatten())
 
     # Hidden layer
     tf.keras.layers.Dense(128, activation='relu')
 
     # Dropout
     tf.keras.layers.Dropout(0.50)
-
-    model.summary()
-
-    # Apply Global Max Pooling
-    model.add(tf.keras.layers.GlobalMaxPooling2D()) 
 
     # Output layer
     # NUM_CATEGORIES outputs (43)

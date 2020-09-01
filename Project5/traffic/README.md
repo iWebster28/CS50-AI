@@ -55,7 +55,9 @@ Added 5th convolutional layer.
 
 **Test 18:**
 Try flattening instead of global max pooling. Less performance. 
-Test 17 is the best!
+
+**Conclusion:**
+Test 15 gave the most consistent results. Relu activation on 4 x (2D Convolutions) with 2 x (Max Pooling and Batch Normalization), then Flattening, 1 Dense Hidden Layer with 128 units, Dropout rate of 0.5, and Softmax Output layer.
 
 ## Test Results
 **Test 1 (Irrelevant):** 10656/10656 - 1s - loss: 0.0220 - acc: 0.9961  
@@ -72,10 +74,19 @@ Test 17 is the best!
 **Test 12:** 10656/10656 - 1s - loss: 0.2867 - acc: 0.9482  
 **Test 13:** 10656/10656 - 1s - loss: 0.2053 - acc: 0.9652  
 **Test 14:** 10656/10656 - 1s - loss: 0.1393 - acc: 0.9788  
-**Test 15:** 10656/10656 - 2s - loss: 0.0500 - acc: 0.9885  
+**Test 15 - Run 1:** 10656/10656 - 2s - loss: 0.0500 - acc: 0.9885  
+**Test 15 - Run 2:** 10656/10656 - 2s - loss: 0.1187 - acc: 0.9670  
+**Test 15 - Run 3:** 10656/10656 - 2s - loss: 0.0358 - acc: 0.9922  
+**Test 15  - Run 4:** 10656/10656 - 2s - loss: 0.0543 - acc: 0.9878  
+**Test 15 - Run 5:** 10656/10656 - 2s - loss: 0.0782 - acc: 0.9799
+** Test 15 Avg:** loss: 0.0674 - acc: 0.98308 **BEST**
 **Test 16:** 10656/10656 - 2s - loss: 0.0718 - acc: 0.9790  
-**Test 17:** 10656/10656 - 2s - loss: 0.0648 - acc: 0.9806  
-**Test 17 - Run 2:** 10656/10656 - 2s - loss: 0.0553 - acc: 0.9844 **BEST**  
+**Test 17 - Run 1:** 10656/10656 - 2s - loss: 0.0648 - acc: 0.9806  
+**Test 17 - Run 2:** 10656/10656 - 2s - loss: 0.0553 - acc: 0.9844    
+**Test 17 - Run 3:** 10656/10656 - 2s - loss: 0.0610 - acc: 0.9819  
+**Test 17 - Run 4:** 10656/10656 - 2s - loss: 0.1466 - acc: 0.9593
+**Test 17 - Run 5:** 10656/10656 - 2s - loss: 0.0624 - acc: 0.9825
+** Test 17 Avg:** loss: 0.07802 - acc: 0.97774
 **Test 18:** 10656/10656 - 2s - loss: 0.0821 - acc: 0.9753  
 
 ## What worked well? 
