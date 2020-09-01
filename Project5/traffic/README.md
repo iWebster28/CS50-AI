@@ -1,16 +1,16 @@
 # traffic.py - A CNN Traffic Sign Identifier
 
 ## What did I try?
-**Test 1**
+**Test 1:**
 2DConv with 32 3x3 filters and relu activation, 2x2 max-pooling, no dropout layer, and flattening.
 
-**Test 2**
+**Test 2:**
 Identical to above, but with 128-unit Dense layer and Dropout with rate of 0.5.
 
-**Test 3**
+**Test 3:**
 Try Test 1 again, but realized should be using categorical_crossentropy on compile; not binary_crossentropy.
 
-**Test 4**
+**Test 4:**
 Try Test 2 again, but realized should be using categorical_crossentropy on compile; not binary_crossentropy. Makes sense now - dropout layer improves performance.
 
 **Test 5:** 
