@@ -98,9 +98,7 @@ Test 15 gave the most consistent results. Relu activation on 4 x (2D Convolution
 ## What did I notice?
 - Having many 'grouped' units of layers works well. i.e. have a convolution with some pooling and batch normalization, then having another convolution with pooling again, and so on.
 
-
-
-
 ## Extra Tests
 **Test 15 Run 6:** 10656/10656 - 2s - loss: 0.0329 - acc: 0.9908
 **Test 15 Run 7:** 10656/10656 - 2s - loss: 0.0267 - acc: 0.9934
+**Test 15 Run 8:** 10656/10656 - 2s - loss: 0.0860 - acc: 0.9794
