@@ -17,10 +17,10 @@ Try Test 2 again, but realized should be using categorical_crossentropy on compi
 Try tanh on the output layer (just for fun). Note to self: tanh is best used for classification between 2 categories.
 
 **Test 6:**
-Trying Dropout at rate of 0.75 - this may make us less biased? Yes!
+Trying Dropout at rate of 0.75 - this may make us less biased/overfitted? Yes!
 
 **Test 7:**
-Trying Dropout at rate of 0.9 - this may make us less biased? Yes!
+Trying Dropout at rate of 0.9 - this may make us less biased/overfitted? Yes!
 
 **Test 8:**
 Trying Dropout at rate of 0.99 - Didn't help. Leaving at 0.9.
@@ -97,3 +97,10 @@ Test 15 gave the most consistent results. Relu activation on 4 x (2D Convolution
 
 ## What did I notice?
 - Having many 'grouped' units of layers works well. i.e. have a convolution with some pooling and batch normalization, then having another convolution with pooling again, and so on.
+
+
+
+
+## Extra Tests
+**Test 15 Run 6:** 10656/10656 - 2s - loss: 0.0329 - acc: 0.9908
+**Test 15 Run 7:** 10656/10656 - 2s - loss: 0.0267 - acc: 0.9934
