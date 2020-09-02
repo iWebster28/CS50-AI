@@ -95,5 +95,5 @@ Test 15 gave the most consistent results. Relu activation on 4 x (2D Convolution
 ## What didn’t work well?
 - Adding too many units to the Conv2D or hidden Dense layers.
 
-## What did you notice?
+## What did I notice?
 - Having many 'grouped' units of layers works well. i.e. have a convolution with some pooling and batch normalization, then having another convolution with pooling again, and so on.
