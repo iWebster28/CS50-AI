@@ -38,7 +38,7 @@ A game based on piles of items. Players take turns removing any positive number 
 
 This program uses reinforcement learning (Markov Decision Process) to train an AI to play Nim. The AI tracks the results of executing certain **actions** in certain **states**, and assigns a **reward** based on success (reward on AI loss: -1, AI win: 1, Tie: 0). **Actions** are represented as (i, j) where i is a pile, and j is the # of items to take. **States** are the sizes of each pile, respectively.
 
-In particular, Q-learning is used to train the AI. Q-learning estimates the value of executing a certain action in a certain state. We continuously update q-values (for each state and action) based on the old q-value and a new estimated q-value (see below). To find the best action, we search for the highest q-value and its associated action.
+In particular, Q-learning is used to train the AI in 10000 games of Nim. Q-learning estimates the value of executing a certain action in a certain state. We continuously update q-values (for each state and action) based on the old q-value and a new estimated q-value (see below). To find the best action, we search for the highest q-value and its associated action.
 ```
 Formula: Q(s, a) <- old_q + alpha * (new_q_est - old_q)
 ```
@@ -51,7 +51,7 @@ old_q: the previous q-value
 new_q_est: sum of the current reward and the future estimated reward
 ```
 
-The **Epsilon-Greedy** algorithm is used to promote further solution space *exploration* instead of *exploitation*. For example, at a rate of **epsilon**, the AI will make a random move instead of the best move. This potentially allows more creative or faster solutions.
+The **Epsilon-Greedy** algorithm is used to promote further solution space *exploration* instead of *exploitation*. For example, with a probability of **epsilon**, the AI will make a random move instead of the best move. This potentially allows more creative or faster solutions.
 
 ## Week5/Project5 - Neural Networks
 ### [Traffic](./Project5/traffic)
