@@ -38,11 +38,12 @@ A game based on piles of items. Players take turns removing any positive number 
 
 This program uses reinforcement learning (Markov Decision Process) to train an AI to play Nim. The AI tracks the results of executing certain **actions** in certain **states**, and assigns a **reward** based on success (reward on AI loss: -1, AI win: 1, Tie: 0). **Actions** are represented as (i, j) where i is a pile, and j is the # of items to take. **States** are the sizes of each pile, respectively.
 
-In particular, Q-learning is used to train the AI. Q-learning estimates the value of executing a certain action in a certain state. We continuously update q-values (for each state and action) based on the old q-value and a new estimated q-value (see below). To make the best action, we search for the highest q-value and its associated action.
+In particular, Q-learning is used to train the AI. Q-learning estimates the value of executing a certain action in a certain state. We continuously update q-values (for each state and action) based on the old q-value and a new estimated q-value (see below). To find the best action, we search for the highest q-value and its associated action.
 ```
-Formula: Q(s, a) <- old_q + alpha*(new_q_est - old_q), where:
+Formula: Q(s, a) <- old_q + alpha * (new_q_est - old_q)
 ```
 ```
+Where:
 s: state - size of each pile
 a: action - (i, j) - i is pile; j is # items to take
 alpha: the learning rate, or the degree to which we value NEW info versus OLD info.
