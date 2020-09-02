@@ -31,16 +31,18 @@ The **unary constraint** in this case is the length of a word: a variable's doma
 
 ## Week4/Project4 - Learning
 ### [Shopping](./Project4/shopping)
-A supervised learning problem to predict whether or not a user will complete an online purchase. Uses scikit-learn with a K-Nearest-Neighbour model for classification (k = 1). Uses a labelled 12000 line dataset of shopping purchases with data such as visitor type, date, and browser information. Measures the **sensitivity** and **specificity** for the predictions made. (where **sensitivity** is the proportion of positive labels correctly identified (e.g. user makes a purchase) and the **specificity** is the proportion of negative labels correctly identified.)
+A supervised learning problem to predict whether or not a shopper will complete an online purchase. The scikit-learn library is used with K-Nearest-Neighbour model for classification (k = 1). For training, a 12000-line dataset of shopping purchases with visitor type, date, and browser information is used. The dataset is labelled by purchase completion (True/False). The program measures the **sensitivity** and **specificity** of the predictions made (where **sensitivity** is the proportion of positive labels correctly identified (e.g. user makes a purchase) and the **specificity** is the proportion of negative labels correctly identified.)
 
 ### [Nim](./Project4/nim)
-A game based around piles of items. Players take turns removing any nonnegative number of items from ONE non-empty pile. The player who takes the last object loses. 
+A game based on piles of items. Players take turns removing any positive number of items from ONE non-empty pile. The player who takes the last item looses. 
 
 This program uses reinforcement learning (Markov Decision Process) to train an AI to play Nim. The AI tracks the results of executing certain **actions** in certain **states**, and assigns a **reward** based on success (reward on AI loss: -1, AI win: 1, Tie: 0). **Actions** are represented as (i, j) where i is a pile, and j is the # of items to take. **States** are the sizes of each pile, respectively.
 
 In particular, Q-learning is used to train the AI. Q-learning works by continuously updating q-values (for each state and action) based on the old q-value and the new estimated q-value.
 ```
 Formula: Q(s, a) <- old_q + alpha*(new_q_est - old_q), where:
+```
+```
 s: state - size of each pile
 a: action - (i, j) - i is pile; j is # items to take
 alpha: the **learning rate**, or the degree to which we value NEW info versus OLD info.
@@ -48,4 +50,4 @@ old_q: the previous q-value
 new_q_est: sum of the current reward and the future estimated reward
 ```
 
-The **Epsilon-Greedy** algorithm is used to promote further solution space exploration instead of exploitation of what the AI already knows. For example, at a rate of **epsilon**, the AI will make a random move instead of the best move. This potentially allows more creative or faster solutions.
+The **Epsilon-Greedy** algorithm is used to promote further solution space *exploration* instead of *exploitation*. For example, at a rate of **epsilon**, the AI will make a random move instead of the best move. This potentially allows more creative or faster solutions.
