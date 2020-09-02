@@ -52,3 +52,8 @@ new_q_est: sum of the current reward and the future estimated reward
 ```
 
 The **Epsilon-Greedy** algorithm is used to promote further solution space *exploration* instead of *exploitation*. For example, at a rate of **epsilon**, the AI will make a random move instead of the best move. This potentially allows more creative or faster solutions.
+
+## Week5/Project5 - Neural Networks
+### [Traffic](./Project5/traffic)
+
+A convolutional neural network to identify 43 different types of street signs. Uses the gtsrb dataset. Please see the README.md within the 'traffic' folder. After running many tests, I found that the most accurate and consistent results were given by the following network layers and parameters: Relu activation on four layers of 2D Convolutions, two instances of Max Pooling + Batch Normalization, Flattening, 1 Dense Hidden Layer with 128 units, a Dropout rate of 0.5, and a Softmax Output layer. The mean test results (Test 15 Avg) for 5 tests showed a loss of 0.0674 and accuracy of 0.98308.
