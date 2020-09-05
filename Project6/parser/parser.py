@@ -17,7 +17,8 @@ V -> "smiled" | "tell" | "were"
 
 # Where:
 # S is full sentence - how would we allow infinite conjunctions?
-# B is base phrase
+# B is base phrase - I should reconsider how a sentence should start either start with NP ONLY
+# i.e. have 'NP VP' from B as it's own START. Then for every S, have START be the first nonterminal symbol. (to make the most grammatical sense)
 # NP is noun phrase
 # PP is pronoun phrase
 # AdvP is adverb phrase
@@ -25,9 +26,9 @@ V -> "smiled" | "tell" | "were"
 # AdjP is an adjective phrase
 
 NONTERMINALS = """
-S -> B | B Conj B | B NP PP Conj B PP | B NP PP
-B -> NP VP | VP NP | NP VP PP
-NP -> N | Det N | Det AdjP N
+S -> B | B Conj B | B NP PP Conj B | B NP PP
+B -> NP VP | VP NP | NP VP PP | VP NP PP
+NP -> N | Det N | Det AdjP N | Det AdjP N Adv | Det N Adv
 PP -> P NP | P NP PP
 AdvP -> Adv V | V Adv
 VP -> V | V NP | AdvP NP | AdvP
@@ -41,6 +42,7 @@ AdjP -> Adj | Adj AdjP
 # sentence 9: B NP PP Conj B PP --- could remove last PP and instead add VP NP PP to B
 # sentence 10: B NP PP
 # How to reduce the NP PP for both sent 9 and 10?
+# Added Det AdjP N Adv | Det N Adv for case 7 (Det AdjP N Adv is extra)
 
 
 grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
