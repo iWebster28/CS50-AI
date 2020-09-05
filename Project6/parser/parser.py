@@ -26,7 +26,8 @@ V -> "smiled" | "tell" | "were"
 # AdjP is an adjective phrase
 
 NONTERMINALS = """
-S -> B | B Conj B | B NP PP Conj B | B NP PP
+S -> BEGIN | BEGIN Conj B | BEGIN NP PP Conj B | BEGIN NP PP
+BEGIN -> NP VP | NP VP PP
 B -> NP VP | VP NP | NP VP PP | VP NP PP
 NP -> N | Det N | Det AdjP N | Det AdjP N Adv | Det N Adv
 PP -> P NP | P NP PP
