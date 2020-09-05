@@ -25,7 +25,7 @@ V -> "smiled" | "tell" | "were"
 # AdjP is an adjective phrase
 
 NONTERMINALS = """
-S -> B | B Conj B | B NP PP Conj B PP | B NP PP PP
+S -> B | B Conj B | B NP PP Conj B PP | B NP PP
 B -> NP VP | VP NP | NP VP PP
 NP -> N | Det N | Det AdjP N
 PP -> P NP | P NP PP
@@ -38,8 +38,9 @@ AdjP -> Adj | Adj AdjP
 # the single AdvP for VP is not a great idea. for sentence 8.
 # added P NP PP for sentence 10
 # sentence 7: how to deal with Adv folowing last N?
-# sentence 9: B NP PP Conj B PP
-# sentence 10: B NP PP PP
+# sentence 9: B NP PP Conj B PP --- could remove last PP and instead add VP NP PP to B
+# sentence 10: B NP PP
+# How to reduce the NP PP for both sent 9 and 10?
 
 
 grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
