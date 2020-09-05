@@ -1,5 +1,6 @@
 import nltk
 import sys
+import re
 
 TERMINALS = """
 Adj -> "country" | "dreadful" | "enigmatical" | "little" | "moist" | "red"
@@ -62,7 +63,15 @@ def preprocess(sentence):
     and removing any word that does not contain at least one alphabetic
     character.
     """
-    raise NotImplementedError
+    words = []
+    words = nltk.word_tokenize(sentence.lower())
+    for word in words:
+        has_alpha = re.search("[a-zA-Z]", word)
+        if has_alpha is None: # Remove any strings without at least 1 alpha character
+            words.remove(word)
+
+    # print(words) # Should we check for alpha before or after? (ex: is "Hello," with the comma considered a 'word'?)
+    return
 
 
 def np_chunk(tree):
@@ -72,7 +81,8 @@ def np_chunk(tree):
     whose label is "NP" that does not itself contain any other
     noun phrases as subtrees.
     """
-    raise NotImplementedError
+
+    
 
 
 if __name__ == "__main__":
