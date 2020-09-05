@@ -15,9 +15,32 @@ V -> "arrived" | "came" | "chuckled" | "had" | "lit" | "said" | "sat"
 V -> "smiled" | "tell" | "were"
 """
 
+# Where:
+# S is full sentence - how would we allow infinite conjunctions?
+# B is base phrase
+# NP is noun phrase
+# PP is pronoun phrase
+# AdvP is adverb phrase
+# VP is verb phrase
+# AdjP is an adjective phrase
+
 NONTERMINALS = """
-S -> N V
+S -> B | B Conj B | B NP PP Conj B PP | B NP PP PP
+B -> NP VP | VP NP | NP VP PP
+NP -> N | Det N | Det AdjP N
+PP -> P NP | P NP PP
+AdvP -> Adv V | V Adv
+VP -> V | V NP | AdvP NP | AdvP
+AdjP -> Adj | Adj AdjP
 """
+
+# Revisions to make:
+# the single AdvP for VP is not a great idea. for sentence 8.
+# added P NP PP for sentence 10
+# sentence 7: how to deal with Adv folowing last N?
+# sentence 9: B NP PP Conj B PP
+# sentence 10: B NP PP PP
+
 
 grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
 parser = nltk.ChartParser(grammar)
@@ -70,8 +93,8 @@ def preprocess(sentence):
         if has_alpha is None: # Remove any strings without at least 1 alpha character
             words.remove(word)
 
-    # print(words) # Should we check for alpha before or after? (ex: is "Hello," with the comma considered a 'word'?)
-    return
+    print(words) # Should we check for alpha before or after? (ex: is "Hello," with the comma considered a 'word'?)
+    return words
 
 
 def np_chunk(tree):
@@ -82,6 +105,7 @@ def np_chunk(tree):
     noun phrases as subtrees.
     """
 
+    return [] # For debugging
     
 
 
