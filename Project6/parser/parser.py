@@ -44,7 +44,7 @@ AdjP -> Adj | Adj AdjP
 # sentence 10: B NP PP
 # How to reduce the NP PP for both sent 9 and 10?
 # Added Det AdjP N Adv | Det N Adv for case 7 (Det AdjP N Adv is extra)
-
+# BEGIN is extra; copied from B. Could just leave all as B
 
 grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
 parser = nltk.ChartParser(grammar)
@@ -108,6 +108,29 @@ def np_chunk(tree):
     whose label is "NP" that does not itself contain any other
     noun phrases as subtrees.
     """
+    noun_phrases = []
+    # Assume input is an nltk.tree object with label `S`
+    print(tree.label())
+    # for elem in tree.subtrees():
+    #     if elem.label() == 'NP':
+    #         print('NP found:', elem)
+    #     else:
+    #         print(elem)
+
+
+    # using the filter feature test
+    print('-------------------')
+    for item in tree.subtrees(lambda t: t.label() == 'NP'):
+        print(item)
+        # if (item.label() is not in NONTERMINALS):
+        # Recursive - call this fn again? append vals to list if height is 1?
+        
+        phrases = item.subtrees(lambda t2: t2.height() == 2) #lambda t2: t2.height() == 1
+        for phrase in phrases: 
+            if phrase != item:
+                # print('lb', phrase.label())
+                print('hey',phrase) # but how to know which belongs to which NP?
+                # noun_phrases.update(phrase)
 
     return [] # For debugging
     
