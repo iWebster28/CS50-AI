@@ -97,7 +97,7 @@ def preprocess(sentence):
         if has_alpha is None: # Remove any strings without at least 1 alpha character
             words.remove(word)
 
-    print(words) # Should we check for alpha before or after? (ex: is "Hello," with the comma considered a 'word'?)
+    # print(words) # Should we check for alpha before or after? (ex: is "Hello," with the comma considered a 'word'?)
     return words
 
 
@@ -110,7 +110,7 @@ def np_chunk(tree):
     """
     noun_phrases = []
     # Assume input is an nltk.tree object with label `S`
-    print(tree.label())
+    # print(tree.label())
     # for elem in tree.subtrees():
     #     if elem.label() == 'NP':
     #         print('NP found:', elem)
@@ -119,20 +119,13 @@ def np_chunk(tree):
 
 
     # using the filter feature test
-    print('-------------------')
+    # print('-------------------')
     for item in tree.subtrees(lambda t: t.label() == 'NP'):
-        print(item)
-        # if (item.label() is not in NONTERMINALS):
-        # Recursive - call this fn again? append vals to list if height is 1?
-        
-        phrases = item.subtrees(lambda t2: t2.height() == 2) #lambda t2: t2.height() == 1
-        for phrase in phrases: 
-            if phrase != item:
-                # print('lb', phrase.label())
-                print('hey',phrase) # but how to know which belongs to which NP?
-                # noun_phrases.update(phrase)
-
-    return [] # For debugging
+        # print(item)
+        noun_phrases.append(item)
+        # noun_phrases.extend([i for i in item.leaves()])
+    # print(noun_phrases)
+    return noun_phrases # For debugging
     
 
 
