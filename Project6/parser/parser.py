@@ -40,7 +40,7 @@ AdjP -> Adj | Adj AdjP
 # the single AdvP for VP is not a great idea. for sentence 8.
 # added P NP PP for sentence 10
 # sentence 7: how to deal with Adv folowing last N?
-# sentence 9: B NP PP Conj B PP --- could remove last PP and instead add VP NP PP to B
+# DONE. sentence 9: B NP PP Conj B PP --- could remove last PP and instead add VP NP PP to B
 # sentence 10: B NP PP
 # How to reduce the NP PP for both sent 9 and 10?
 # Added Det AdjP N Adv | Det N Adv for case 7 (Det AdjP N Adv is extra)
@@ -110,24 +110,12 @@ def np_chunk(tree):
     """
     noun_phrases = []
     # Assume input is an nltk.tree object with label `S`
-    # print(tree.label())
-    # for elem in tree.subtrees():
-    #     if elem.label() == 'NP':
-    #         print('NP found:', elem)
-    #     else:
-    #         print(elem)
-
-
-    # using the filter feature test
-    # print('-------------------')
     for item in tree.subtrees(lambda t: t.label() == 'NP'):
         # print(item)
         noun_phrases.append(item)
-        # noun_phrases.extend([i for i in item.leaves()])
     # print(noun_phrases)
     return noun_phrases # For debugging
     
-
 
 if __name__ == "__main__":
     main()
