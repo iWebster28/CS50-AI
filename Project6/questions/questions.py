@@ -1,5 +1,8 @@
 import nltk
 import sys
+import glob
+import os
+import string
 
 FILE_MATCHES = 1
 SENTENCE_MATCHES = 1
@@ -48,7 +51,20 @@ def load_files(directory):
     Given a directory name, return a dictionary mapping the filename of each
     `.txt` file inside that directory to the file's contents as a string.
     """
-    raise NotImplementedError
+
+    files = {}
+    base = os.path.join(os.curdir, directory, '') # Add '' so that os.sep is appended to end of path.
+    
+    for filepath in glob.glob(base + '*.txt'): # Grab all text files
+        with open(filepath, 'r') as f:
+            filename = filepath[len(base):] # Keep only the filename from the filepath.
+            files[filename] = f.read() # Read in contents to dictionary
+
+    # print(string.punctuation)
+    # print('-', nltk.corpus.stopwords.words('english'))
+
+    # print(files.keys())
+    return files
 
 
 def tokenize(document):
@@ -59,7 +75,17 @@ def tokenize(document):
     Process document by coverting all words to lowercase, and removing any
     punctuation or English stopwords.
     """
-    raise NotImplementedError
+
+    words = []
+    source = nltk.word_tokenize(document.lower())
+    words = [word for word in source
+        if (word not in string.punctuation) and 
+        (word not in nltk.corpus.stopwords.words('english'))
+    ] # Strip out any punctuation or stopwords
+
+    # print(words)
+
+    return words
 
 
 def compute_idfs(documents):
@@ -70,7 +96,8 @@ def compute_idfs(documents):
     Any word that appears in at least one of the documents should be in the
     resulting dictionary.
     """
-    raise NotImplementedError
+    
+    
 
 
 def top_files(query, files, idfs, n):
