@@ -17,6 +17,7 @@ V -> "smiled" | "tell" | "were"
 
 # Where:
 # S is full sentence - how would we allow infinite conjunctions?
+# BEGIN includes ways of starting a sentence. (i.e. cannot start a phrase with VP. This is why I added BEGIN)
 # B is base phrase - I should reconsider how a sentence should start either start with NP ONLY
 # i.e. have 'NP VP' from B as it's own START. Then for every S, have START be the first nonterminal symbol. (to make the most grammatical sense)
 # NP is noun phrase
@@ -28,7 +29,7 @@ V -> "smiled" | "tell" | "were"
 NONTERMINALS = """
 S -> BEGIN | BEGIN Conj B | BEGIN NP PP Conj B | BEGIN NP PP
 BEGIN -> NP VP | NP VP PP
-B -> NP VP | VP NP | NP VP PP | VP NP PP
+B -> BEGIN | VP NP | VP NP PP
 NP -> N | Det N | Det AdjP N | Det AdjP N Adv | Det N Adv
 PP -> P NP | P NP PP
 AdvP -> Adv V | V Adv
