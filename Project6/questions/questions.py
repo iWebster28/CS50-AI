@@ -23,29 +23,29 @@ def main():
     }
     file_idfs = compute_idfs(file_words)
 
-    while (1): # While loop for debugging!
-        # Prompt user for query
-        query = set(tokenize(input("Query: ")))
+    # while (1): # While loop for debugging!
+    # Prompt user for query
+    query = set(tokenize(input("Query: ")))
 
-        # Determine top file matches according to TF-IDF
-        filenames = top_files(query, file_words, file_idfs, n=FILE_MATCHES)
+    # Determine top file matches according to TF-IDF
+    filenames = top_files(query, file_words, file_idfs, n=FILE_MATCHES)
 
-        # Extract sentences from top files
-        sentences = dict()
-        for filename in filenames:
-            for passage in files[filename].split("\n"):
-                for sentence in nltk.sent_tokenize(passage):
-                    tokens = tokenize(sentence)
-                    if tokens:
-                        sentences[sentence] = tokens
+    # Extract sentences from top files
+    sentences = dict()
+    for filename in filenames:
+        for passage in files[filename].split("\n"):
+            for sentence in nltk.sent_tokenize(passage):
+                tokens = tokenize(sentence)
+                if tokens:
+                    sentences[sentence] = tokens
 
-        # Compute IDF values across sentences
-        idfs = compute_idfs(sentences)
+    # Compute IDF values across sentences
+    idfs = compute_idfs(sentences)
 
-        # Determine top sentence matches
-        matches = top_sentences(query, sentences, idfs, n=SENTENCE_MATCHES)
-        for match in matches:
-            print(match)
+    # Determine top sentence matches
+    matches = top_sentences(query, sentences, idfs, n=SENTENCE_MATCHES)
+    for match in matches:
+        print(match)
 
 
 def load_files(directory):
